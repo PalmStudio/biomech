@@ -1,0 +1,13 @@
+^data-raw$
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.travis\.yml$
+^README\.Rmd$
+man/figures
+^CODE_OF_CONDUCT\.md$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^codecov\.yml$
+^bin$
+^tmp$
