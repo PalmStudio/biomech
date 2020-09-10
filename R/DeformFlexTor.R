@@ -2,6 +2,12 @@
 #'
 #' Compute the deformation by applying both bending and torsion
 #'
+#' @param matPoints Point matrix
+#' @param pas Length of the segments that discretize the object (m).
+#' @param Ncalc Number of points used in the grid discretizing the section.
+#' @param Nboucle Number of iterations to compute the torsion and bending
+#' @param verbose Boolean. Return information during procress?
+#'
 #' @return A matrix: [PtsX; PtsY; PtsZ; PtsDist; PtsAglXY; PtsAglXZ; PtsAglTor]
 #' @export
 #'
@@ -10,22 +16,14 @@
 #' filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "deformation")
 #' matExp = data.table::fread(filepath, data.table = FALSE)
 #' matPoints = CreaPoints(2000,400,matExp)
-#' matPoints is the matrix of points for a straight rachis. So it reads
-#' measured information that is already bent, and put it back to a straight line.
+#' # matPoints is the matrix of points for a straight rachis. So it reads
+#' # measured information that is already bent, and put it back to a straight line.
 #' pas= 0.02 # in meter. -> Length of the segments that discretize the object.
 #' Ncalc= 100 # number of points used in the grid that discretized the section.
 #' Nboucle= 15 # if we want to compute the torsion after the bending step by step instead of
-#' all bending and then torsion.
+#' # all bending and then torsion.
 #' matRes = DeformFlexTor(matPoints, pas, Ncalc, Nboucle, 1); # Computes the deformation -> this is the actual model
-DeformFlexTor = function(matPoints){
-
-  # Constantes de calcul
-  # Nlin est calcule selon le pas
-  pas = 0.02 # distance entre points interpoles de 'pas' en (m)
-  # Discretisation pour le calcul des inerties et surfaces
-  Ncalc = 100
-  # Iterations de chargement pour le calcul
-  Nboucle = 15
+DeformFlexTor = function(matPoints,pas,Ncalc,Nboucle,verbose = TRUE){
 
   # Identification des lignes de la matrice
   iX = 1
@@ -41,6 +39,8 @@ DeformFlexTor = function(matPoints){
   iModuleCisaillement = 11
   iAngleSection = 12
   iDAppliPoidsFeuil = 13
+
+  vecRotFlex = matrix(0, ncol = 3, nrow = 3)
 
   # Nombre de points experimentaux
   NpointsExp = ncol(matPoints)
@@ -96,7 +96,8 @@ DeformFlexTor = function(matPoints){
   vecAglTor = approx(c(0, distLineique), c(vAngle_Tor[1], vAngle_Tor), vecDist, method = 'linear')$y
 
   vDAppliPoidsFeuil = matPoints[iDAppliPoidsFeuil,]
-  vecDAppliPoidsFeuil = approx(c(0, distLineique), c(vDAppliPoidsFeuil[1], vDAppliPoidsFeuil), vecDist, method = 'linear')
+  vecDAppliPoidsFeuil = approx(c(0, distLineique), c(vDAppliPoidsFeuil[1], vDAppliPoidsFeuil),
+                               vecDist, method = 'linear')$y
 
   # Interpolation des coordonnees dans le repere origine
   # Identification des points experimentaux dans la discretisation lineique
@@ -145,27 +146,32 @@ DeformFlexTor = function(matPoints){
       sct = matPoints[iTypeSection, iter]
       agDeg = SomCum_vecAglTor[iDiscretPtsExp[iter]] * 180 / pi # orientation section (degres)
 
-      ########################################################################################
-      # Continuer ici
-      [IgFlex, IgTor, Sr] = InertieFlexRota(b, h, agDeg, sct, Ncalc, 0)
-      ########################################################################################
+      InertiaFlexRot = InertieFlexRota(b, h, agDeg, sct, Ncalc)
+      IgFlex = InertiaFlexRot$IgFlex
+      IgTor = InertiaFlexRot$IgTor
+      Sr = InertiaFlexRot$Sr
 
-      vIgFlex(iter) = IgFlex
-      vIgTor(iter) = IgTor
-      vSr(iter) = Sr
+      vIgFlex[iter] = IgFlex
+      vIgTor[iter] = IgTor
+      vSr[iter] = Sr
     }
 
     # Interpolation lineique des inerties
-    vecInertieFlex = interp1([0 distLineique], [vIgFlex(1) vIgFlex], vecDist, 'linear')
-    vecInertieTor = interp1([0 distLineique], [vIgTor(1) vIgTor], vecDist, 'linear')
+    vecInertieFlex = approx(c(0,distLineique), c(vIgFlex[1], vIgFlex), vecDist, method = 'linear')$y
+    vecInertieTor = approx(c(0,distLineique), c(vIgTor[1], vIgTor), vecDist, method = 'linear')$y
 
     # Ecriture des angles a partir des nouvelles coordonnees
     # Distance et angles de chaque segment P2P1
-    [vecDist_P2P1, vecAngle_XY, vecAngle_XZ] = XYZ_Vers_Agl(vecX, vecY, vecZ)
+    XYZangles = XYZ_Vers_Agl(vecX, vecY, vecZ)
 
-    vecDist_P2P1(1) = 0
-    vecAngle_XY(1) = vecAngle_XY(2)
-    vecAngle_XZ(1) = vecAngle_XZ(2)
+    vecDist_P2P1 = XYZangles$dist_P2P1
+    vecAngle_XY  = XYZangles$vAngle_XY
+    vecAngle_XZ  = XYZangles$vAngle_XZ
+
+
+    vecDist_P2P1[1] = 0
+    vecAngle_XY[1] = vecAngle_XY[2]
+    vecAngle_XZ[1] = vecAngle_XZ[2]
 
     # Flexion
     # Forces lineiques de flexion
@@ -174,148 +180,150 @@ DeformFlexTor = function(matPoints){
 
     # Force lineique
     # Code avec invariance par 'Nboucle'
-    # vForce = vPoidsFlexion .* cos(oriAglXY(iDiscretPtsExp)) .* pesanteur
-    vForce = vPoidsFlexion .* cos(vecAngle_XY(iDiscretPtsExp)) .* pesanteur
+    vForce = vPoidsFlexion * cos(vecAngle_XY[iDiscretPtsExp]) * pesanteur
 
-    vecForce = interp1([0 distLineique], [vForce(1) vForce], vecDist, 'linear')
+    vecForce = approx(c(0,distLineique), c(vForce[1], vForce), vecDist, method = 'linear')$y
 
     # Efforts tranchants et moments de flexion
-    vecTranchant = cumsum(vecForce(Nlin : -1 : 1) .* pas)
-    vecTranchant = vecTranchant(Nlin : -1 : 1)
+    vecTranchant = cumsum(vecForce[seq(Nlin,1,-1)] * pas)
+    vecTranchant = vecTranchant[seq(Nlin,1,-1)]
 
-    vecMoment = -cumsum(vecTranchant(Nlin : -1 : 1) .* pas)
-    vecMoment = vecMoment(Nlin : -1 : 1)
+    vecMoment = -cumsum(vecTranchant[seq(Nlin,1,-1)] * pas)
+    vecMoment = vecMoment[seq(Nlin,1,-1)]
 
     # Calcul classique de la deformee (delta de distance)
-    fct = vecMoment ./ (vecMOE .* vecInertieFlex)
+    fct = vecMoment / (vecMOE * vecInertieFlex)
 
-    vecInteg = zeros(1, Nlin)
-    vecInteg = cumsum(fct(Nlin : -1 : 1).*pas)
-    vecInteg = vecInteg(Nlin : -1 : 1)
+    vecInteg = rep(0, Nlin)
+    vecInteg = cumsum(fct[seq(Nlin,1,-1)] * pas)
+    vecInteg = vecInteg[seq(Nlin,1,-1)]
 
     # Condition encastree (derivee 1 = 0)
-    vecInteg = vecInteg(1) - vecInteg
+    vecInteg = vecInteg[1] - vecInteg
     vecAngleFlexion = vecInteg
 
     # Test de l'hypothese des petits deplacements
-    AngleMax = 21 .* pi ./ 180 # 21° est la limite
+    AngleMax = 21 * pi / 180 # 21 degrees is the limit
 
-    if (max(abs(vecAngleFlexion)) > AngleMax)
-      disp(['Angle de flexion maximum (degres) = ' num2str(max(abs(vecAngleFlexion)) .* 180 ./ pi)])
-    disp("(!) hypothese des petits deplacements non verifiee en FLEXION (!)")
-    end
+    if(verbose && max(abs(vecAngleFlexion)) > AngleMax){
+      cat('Maximum bending angle (degree) = ', max(abs(vecAngleFlexion)) * 180 / pi)
+      cat("(!) Hypothesis of small displacements not verified for BENDING (!)")
+    }
 
     # Torsion
     pesanteur = 9.8
-    vMTor = zeros(1, NpointsExp)
+    vMTor = rep(0, NpointsExp)
 
-    for iter = 1 : NpointsExp
-    FDr = [0; 0; -vPoidsFeuillesD(iter) .* vDist_P2P1(iter) .* pesanteur]
-    # Code avec invariance par 'Nboucle'
-    # ForceFeuilDr = Rota_Inverse_YZ(FDr, oriAglXY(iter), oriAglXZ(iter))
-    ForceFeuilDr = Rota_Inverse_YZ(FDr, vecAngle_XY(iter), vecAngle_XZ(iter))
+    for(iter in 1 : NpointsExp){
+      FDr = matrix(c(0, 0, -vPoidsFeuillesD[iter] * vDist_P2P1[iter] * pesanteur), ncol = 1)
+      # Code avec invariance par 'Nboucle'
+      ForceFeuilDr = Rota_Inverse_YZ(FDr, vecAngle_XY[iter], vecAngle_XZ[iter])
 
-    FGa = [0; 0; -vPoidsFeuillesG(iter) .* vDist_P2P1(iter) .* pesanteur]
-    # Code avec invariance par 'Nboucle'
-    # ForceFeuilGa = Rota_Inverse_YZ(FGa, oriAglXY(iter), oriAglXZ(iter))
-    ForceFeuilGa = Rota_Inverse_YZ(FGa, vecAngle_XY(iter), vecAngle_XZ(iter))
+      FGa = matrix(c(0,0,-vPoidsFeuillesG[iter] * vDist_P2P1[iter] * pesanteur), nrow = 3, byrow = TRUE)
+      # Code avec invariance par 'Nboucle'
+      # ForceFeuilGa = Rota_Inverse_YZ(FGa, oriAglXY[iter], oriAglXZ[iter])
+      ForceFeuilGa = Rota_Inverse_YZ(FGa, vecAngle_XY[iter], vecAngle_XZ[iter])
 
-    DistPoint = vecDAppliPoidsFeuil(iDiscretPtsExp(iter))
-    AnglePoint = SomCum_vecAglTor(iDiscretPtsExp(iter))
+      DistPoint = vecDAppliPoidsFeuil[iDiscretPtsExp[iter]]
+      AnglePoint = SomCum_vecAglTor[iDiscretPtsExp[iter]]
 
-    # Hypothese de contribution partie D ou G
-    if (AnglePoint > 0), kD = 0; kG = 1;
-    elseif (AnglePoint < 0), kD = 1; kG = 0;
-    elseif (AnglePoint == 0), kD = 0; kG = 0; end
+      # Hypothese de contribution partie D ou G
+      if(AnglePoint > 0){
+        kD = 0
+        kG = 1
+      }else if(AnglePoint < 0){
+        kD = 1
+        kG = 0
+      }else if(AnglePoint == 0){
+        kD = 0
+        kG = 0
+      }
 
-    MD = DistPoint .* kD .* cos(AnglePoint) .* ForceFeuilDr(3)
-    MG = DistPoint .* kG .* cos(AnglePoint + pi) .* ForceFeuilGa(3)
+      MD = DistPoint * kD * cos(AnglePoint) * ForceFeuilDr[3]
+      MG = DistPoint * kG * cos(AnglePoint + pi) * ForceFeuilGa[3]
 
-    vMTor(iter) = MD + MG
-    end
+      vMTor[iter] = MD + MG
+    }
 
-    vecMTor = interp1([0 distLineique], [vMTor(1) vMTor], vecDist, 'linear')
-    vecDerivAglTor = vecMTor ./ (vecG .* vecInertieTor)
+    vecMTor = approx(c(0,distLineique), c(vMTor[1], vMTor), vecDist, method = 'linear')$y
 
-    vecAngleTorsion = cumsum(vecDerivAglTor .* pas) # integration le long de la tige
+    vecDerivAglTor = vecMTor / (vecG * vecInertieTor)
 
-    if (max(abs(vecAngleTorsion)) > AngleMax)
-      disp(['Angle de torsion maximum (degres) = ' num2str(max(abs(vecAngleTorsion)) .* 180 ./ pi)])
-    disp("(!) hypothese des petits deplacements non verifiee en TORSION (!)")
-    end
+    vecAngleTorsion = cumsum(vecDerivAglTor * pas) # integration le long de la tige
+
+    if(max(abs(vecAngleTorsion)) > AngleMax){
+      cat('Maximum torsion angle (degree) = ', max(abs(vecAngleTorsion)) * 180 / pi)
+      cat("(!) Hypothesis of small displacements not verified for TORSION(!)")
+    }
 
     SomCum_vecAglTor = SomCum_vecAglTor + vecAngleTorsion # cumul par increment de poids
 
-    if and((gph == 1), (iterPoids == Nboucle))
-    disp(' ')
-    disp(['Angle final de torsion en bout (degres) = ' num2str(SomCum_vecAglTor(end) .* 180 ./ pi)])
-    end
+    if(verbose && iterPoids == Nboucle){
+      cat(' ')
+      cat('Final torsion angle at the tip (degree) = ',
+          SomCum_vecAglTor[length(SomCum_vecAglTor)] * 180 / pi)
+    }
 
-    %=============================================================================
-      # Nouvelles coordonnees des points
-      neoVecX = zeros(1, Nlin)
-    neoVecY = zeros(1, Nlin)
-    neoVecZ = zeros(1, Nlin)
+    # Nouvelles coordonnees des points
+    neoVecX = neoVecY = neoVecZ = rep(0, Nlin)
 
-    for iter = 1 : Nlin
-    # Origine P1
-    if iter == 1
-    P2 = [vecX(iter); vecY(iter); vecZ(iter)]
-    P1 = [0; 0; 0]
-    else
-      P2 = [vecX(iter); vecY(iter); vecZ(iter)]
-    P1 = [vecX(iter-1); vecY(iter-1); vecZ(iter-1)]
-    end
+    for(iter in 1 : Nlin){
+      # Origine P1
+      P2 = matrix(c(vecX[iter], vecY[iter], vecZ[iter]), nrow = 3, byrow = TRUE)
 
-    P2P1 = P2 - P1
+      if (iter == 1){
+        P1 = matrix(rep(0,3), ncol = 1)
+      }else{
+        P2 = matrix(c(vecX[iter-1], vecY[iter-1], vecZ[iter-1]), nrow = 3, byrow = TRUE)
+      }
 
-    # Changement de base
-    # Segment devient colineaire a l'axe OX
-    vecRotInv = Rota_Inverse_YZ(P2P1, vecAngle_XY(iter), vecAngle_XZ(iter));
+      P2P1 = P2 - P1
 
-    # Flexion ===
-    # Equivalent a une rotation autour de OY
-    # Rotation autour de OY
-    # La rotation est fausse pour les forts angles
-    # Code remplace par :
-    vecRotFlex(1,1)  = vecRotInv(1)
-    vecRotFlex(2,1)  = vecRotInv(2)
-    vecRotFlex(3,1)  = pas .* vecAngleFlexion(iter)
+      # Changement de base
+      # Segment devient colineaire a l'axe OX
+      vecRotInv = Rota_Inverse_YZ(P2P1, vecAngle_XY[iter], vecAngle_XZ[iter])
 
-    # Torsion
-    # Equivalent a une rotation autour de OX
-    # Initialement la section est tournée mais sans torsion
-    aglTorGeom = SomCum_vecAglTor(iter) - oriTor(iter)
+      # Flexion
+      # Equivalent a une rotation autour de OY
+      # Rotation autour de OY
+      # La rotation est fausse pour les forts angles
+      # Code remplace par :
+      vecRotFlex[1,1] = vecRotInv[1]
+      vecRotFlex[2,1] = vecRotInv[2]
+      vecRotFlex[3,1] = pas * vecAngleFlexion[iter]
 
-    cs = cos(aglTorGeom)
-    sn = sin(aglTorGeom)
+      # Torsion
+      # Equivalent a une rotation autour de OX
+      # Initialement la section est tournee mais sans torsion
+      aglTorGeom = SomCum_vecAglTor[iter] - oriTor[iter]
 
-    matRotX =	[1   0   0;
-               0  cs -sn;
-               0  sn  cs];
+      cs = cos(aglTorGeom)
+      sn = sin(aglTorGeom)
 
-    vecRotTor = matRotX * vecRotFlex
+      matRotX =	matrix(c(1,0,0,0,cs,-sn,0,sn,cs), nrow = 3, byrow = TRUE)
 
-    # Base d'origine
-    vecRot = Rota_YZ(vecRotTor, vecAngle_XY(iter), vecAngle_XZ(iter))
+      vecRotTor = matRotX %*% vecRotFlex
 
-    # Point dans la base origine
-    if iter == 1
-    neoX = vecRot(1)
-    neoY = vecRot(2)
-    neoZ = vecRot(3)
-    else
-      neoX = neoVecX(iter - 1) + vecRot(1)
-    neoY = neoVecY(iter - 1) + vecRot(2)
-    neoZ = neoVecZ(iter - 1) + vecRot(3)
-    end
+      # Base d'origine
+      vecRot = Rota_YZ(vecRotTor, vecAngle_XY[iter], vecAngle_XZ[iter])
 
-    # Re-ecriture des points
-    neoVecX(iter) = neoX
-    neoVecY(iter) = neoY
-    neoVecZ(iter) = neoZ
+      # Point dans la base origine
+      if(iter == 1){
+        neoX = vecRot[1]
+        neoY = vecRot[2]
+        neoZ = vecRot[3]
+      }else{
+        neoX = neoVecX[iter - 1] + vecRot[1]
+        neoY = neoVecY[iter - 1] + vecRot[2]
+        neoZ = neoVecZ[iter - 1] + vecRot[3]
+      }
 
-    end
+      # Re-ecriture des points
+      neoVecX[iter] = neoX
+      neoVecY[iter] = neoY
+      neoVecZ[iter] = neoZ
+
+    }
 
     # Mise a jour des variables
     vecX = neoVecX
@@ -324,48 +332,39 @@ DeformFlexTor = function(matPoints){
 
     # Conservation des distances
     # pas = distance entre les points
-    [v1, v2, v3] = XYZ_Vers_Agl(vecX, vecY, vecZ)
-    [vecX, vecY, vecZ] = Agl_Vers_XYZ([0 repmat(pas,1,(Nlin-1))], v2, v3)
+    XYZangles = XYZ_Vers_Agl(vecX, vecY, vecZ)
 
-    clear v1 v2 v3
+    coords = Agl_Vers_XYZ(c(0,rep(pas,Nlin-1)), XYZangles$vAngle_XY, XYZangles$vAngle_XZ)
+
+    vecX = coords$vecX
+    vecY = coords$vecY
+    vecZ = coords$vecZ
 
     # Calcul des distances des points experimentaux
     # Entre avant et apres deformation
-    for iter = 1 : NpointsExp
-    c1 = (vX(iter) - vecX(iDiscretPtsExp(iter))).^2
-    c2 = (vY(iter) - vecY(iDiscretPtsExp(iter))).^2
-    c3 = (vZ(iter) - vecZ(iDiscretPtsExp(iter))).^2
+    for(iter in 1 : NpointsExp){
+      c1 = (vX[iter] - vecX[iDiscretPtsExp[iter]])^2
+      c2 = (vY[iter] - vecY[iDiscretPtsExp[iter]])^2
+      c3 = (vZ[iter] - vecZ[iDiscretPtsExp[iter]])^2
 
-    matDistPtsExp(iterPoids, iter) = sqrt(c1 + c2 + c3)
-    end
-
-    if (gph == 1)
-      # Affichage graphique
-      plot3(vecX, vecY, vecZ, 'b-')
-    plot3(vecX(iDiscretPtsExp), vecY(iDiscretPtsExp), vecZ(iDiscretPtsExp), 'bo')
-    end
-
+      matDistPtsExp[iterPoids, iter] = sqrt(c1 + c2 + c3)
+    }
   } # iterPoids
-  %=== Fin de boucle ===
 
-    if (gph == 1)
-      hold off
+  PtsX = vecX[iDiscretPtsExp]
+  PtsY = vecY[iDiscretPtsExp]
+  PtsZ = vecZ[iDiscretPtsExp]
 
-  disp(' ')
-  disp('Distances des points experimentaux entre avant et apres deformation (mm) :')
-  disp(matDistPtsExp.*1e3)
-  end
+  Points = XYZ_Vers_Agl(PtsX, PtsY, PtsZ)
 
-  %=== Resultats ===
-    PtsX = vecX(iDiscretPtsExp)
-  PtsY = vecY(iDiscretPtsExp)
-  PtsZ = vecZ(iDiscretPtsExp)
+  PtsDist = Points$dist_P2P1
+  PtsAglXY = Points$vAngle_XY
+  PtsAglXZ = Points$vAngle_XZ
 
-  [PtsDist, PtsAglXY, PtsAglXZ] = XYZ_Vers_Agl(PtsX, PtsY, PtsZ)
+  PtsAglXY = PtsAglXY * 180 / pi
+  PtsAglXZ = PtsAglXZ * 180 / pi
+  PtsAglTor = SomCum_vecAglTor[iDiscretPtsExp] * 180 / pi
 
-  PtsAglXY = PtsAglXY .* 180 ./ pi
-  PtsAglXZ = PtsAglXZ .* 180 ./ pi
-  PtsAglTor = SomCum_vecAglTor(iDiscretPtsExp) .* 180 ./ pi
-
-  matRes = [PtsX; PtsY; PtsZ; PtsDist; PtsAglXY; PtsAglXZ; PtsAglTor]
+  list(PtsX = PtsX, PtsY = PtsY, PtsZ = PtsZ, PtsDist = PtsDist,
+       PtsAglXY = PtsAglXY, PtsAglXZ = PtsAglXZ, PtsAglTor = PtsAglTor)
 }

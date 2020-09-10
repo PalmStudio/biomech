@@ -48,13 +48,13 @@ InertieFlexRota = function(b, h, agDeg, sct, N = 100){
 
   # Inerties et surface
   angleRadian = agDeg * pi / 180
-  # rotMatrix = [[cos(angleRadian) -sin(angleRadian)]; [sin(angleRadian) cos(angleRadian)]]
+  rotMatrix = matrix(c(cos(angleRadian), -sin(angleRadian), sin(angleRadian), cos(angleRadian)), nrow = 2, byrow = TRUE)
 
   Point_x = vecPresenceSection * ((vecIndColonne - mg) * pas)
   Point_y = vecPresenceSection * ((vecIndLigne - ng) * pas)
 
-  # Point = [transpose(Point_x); transpose(Point_y)]
-  rotPoint = rotMatrix * Point
+  Point = matrix(c(Point_x, Point_y), nrow = 2, byrow = TRUE)
+  rotPoint = rotMatrix %*% Point
 
   x = rotPoint[1,]
   y = rotPoint[2,]
@@ -64,6 +64,7 @@ InertieFlexRota = function(b, h, agDeg, sct, N = 100){
   IgTor = sum(x^2 + y^2) * dS
   Sr = sum(vecPresenceSection) * dS
 
+  list(IgFlex = IgFlex, IgTor = IgTor, Sr = Sr)
 }
 
 #' Fill in the matrix
@@ -122,8 +123,8 @@ Remplir= function(section, sct){
     vecIndLigne = matIndLigne
     vecIndColonne = matIndColonne
 
-    n13 = vecIndColonne .* b13(1) + b13(2)
-    n23 = vecIndColonne .* b23(1) + b23(2)
+    n13 = vecIndColonne * b13[1] + b13[2]
+    n23 = vecIndColonne * b23[1] + b23[2]
 
     section = vecIndLigne >= n13 & vecIndLigne >= n23
   }
