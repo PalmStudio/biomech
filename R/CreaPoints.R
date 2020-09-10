@@ -118,4 +118,10 @@ CreaPoints = function(MOE, CIS, matExp){
            PoidsTige,PoidsFeuillesDroite,PoidsFeuillesGauche,
            ModuleElasticite,ModuleCisaillement,AngleSection,
            DAppliPoidsFeuil), ncol = NpointsExp, byrow = TRUE)
+
+  matrix(unlist(c(X,Y,Z,TypeSection,Base,Hauteur,
+                  PoidsTige,PoidsFeuillesDroite,PoidsFeuillesGauche,
+                  ModuleElasticite,ModuleCisaillement,AngleSection,
+                  DAppliPoidsFeuil)), ncol = NpointsExp, byrow = TRUE)
+
 }
