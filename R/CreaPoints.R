@@ -113,15 +113,10 @@ CreaPoints = function(MOE, CIS, matExp){
   DAppliPoidsFeuil = sin(XDistance / tail(XDistance,1) * pi) * dF
 
   #===============================================================================
-  # Resultat
-  matrix(c(X,Y,Z,TypeSection,Base,Hauteur,
-           PoidsTige,PoidsFeuillesDroite,PoidsFeuillesGauche,
-           ModuleElasticite,ModuleCisaillement,AngleSection,
-           DAppliPoidsFeuil), ncol = NpointsExp, byrow = TRUE)
-
+  # Resultats
   matrix(unlist(c(X,Y,Z,TypeSection,Base,Hauteur,
                   PoidsTige,PoidsFeuillesDroite,PoidsFeuillesGauche,
                   ModuleElasticite,ModuleCisaillement,AngleSection,
                   DAppliPoidsFeuil)), ncol = NpointsExp, byrow = TRUE)
-
+  # x	y	z	type	b	h	mass	leaves_mass_right	leaves_mass_left	elastic_modulus	shear_modulus	torsion distance
 }
