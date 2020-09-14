@@ -22,7 +22,7 @@
 #' Ncalc= 100 # number of points used in the grid that discretized the section.
 #' Nboucle= 15 # if we want to compute the torsion after the bending step by step instead of
 #' # all bending and then torsion.
-#' matRes = DeformFlexTor(matPoints, pas, Ncalc, Nboucle, 1); # Computes the deformation -> this is the actual model
+#' matRes = DeformFlexTor(matPoints, pas, Ncalc, Nboucle, TRUE); # Computes the deformation -> this is the actual model
 DeformFlexTor = function(matPoints,pas,Ncalc,Nboucle,verbose = TRUE){
 
   # Identification des lignes de la matrice
@@ -40,12 +40,12 @@ DeformFlexTor = function(matPoints,pas,Ncalc,Nboucle,verbose = TRUE){
   iAngleSection = 12
   iDAppliPoidsFeuil = 13
 
-  vecRotFlex = matrix(0, ncol = 3, nrow = 3)
+  vecRotFlex = matrix(0, ncol = 1, nrow = 3)
 
   # Nombre de points experimentaux
   NpointsExp = ncol(matPoints)
 
-  # Distance et angles de chaque segment P2P1 ===
+  # Distance et angles de chaque segment P2P1
   vX = matPoints[iX,]
   vY = matPoints[iY,]
   vZ = matPoints[iZ,]
@@ -274,14 +274,15 @@ DeformFlexTor = function(matPoints,pas,Ncalc,Nboucle,verbose = TRUE){
       if (iter == 1){
         P1 = matrix(rep(0,3), ncol = 1)
       }else{
-        P2 = matrix(c(vecX[iter-1], vecY[iter-1], vecZ[iter-1]), nrow = 3, byrow = TRUE)
+        P1 = matrix(c(vecX[iter-1], vecY[iter-1], vecZ[iter-1]), nrow = 3, byrow = TRUE)
       }
 
       P2P1 = P2 - P1
 
       # Changement de base
       # Segment devient colineaire a l'axe OX
-      vecRotInv = Rota_Inverse_YZ(P2P1, vecAngle_XY[iter], vecAngle_XZ[iter])
+      vecRotInv = Rota_Inverse_YZ(OP = P2P1, Agl_Y = vecAngle_XY[iter],
+                                  Agl_Z = vecAngle_XZ[iter])
 
       # Flexion
       # Equivalent a une rotation autour de OY

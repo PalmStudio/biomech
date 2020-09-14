@@ -13,7 +13,7 @@
 #' Rota_Inverse_YZ(matrix(rep(0,3), ncol = 1), 0.8517207, 0)
 Rota_Inverse_YZ = function(OP, Agl_Y, Agl_Z){
 
-  gl_Y = -Agl_Y
+  Agl_Y = -Agl_Y
   Agl_Z = -Agl_Z
 
   # Rotation autour de OZ

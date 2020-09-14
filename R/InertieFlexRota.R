@@ -111,8 +111,8 @@ Remplir= function(section, sct){
   # sct = 3 : triangle haut
   if(sct == 3){
 
-    b13 = solve(matrix(c(1,1,ncol(section)/2,1), nrow = 2, byrow = TRUE)) %*% matrix(c(1,nrow(section)), ncol = 1)
-    b23 = solve(matrix(c(ncol(section),1,ncol(section)/2,1), nrow = 2, byrow = TRUE)) %*% matrix(c(1,nrow(section)), ncol = 1)
+    b13 = solve(matrix(c(1,1,ncol(section)/2,1), nrow = 2, byrow = TRUE)) %*% matrix(c(nrow(section),1), ncol = 1)
+    b23 = solve(matrix(c(ncol(section),1,ncol(section)/2,1), nrow = 2, byrow = TRUE)) %*% matrix(c(nrow(section),1), ncol = 1)
 
     iterN = matrix(1 : nrow(section), nrow = 1)
     iterM = matrix(1 : ncol(section), nrow = 1)
