@@ -350,6 +350,6 @@ bend = function(matPoints,pas,Ncalc,Nboucle,verbose = TRUE){
   PtsAglXZ = PtsAglXZ * 180 / pi
   PtsAglTor = SomCum_vecAglTor[iDiscretPtsExp] * 180 / pi
 
-  list(PtsX = PtsX, PtsY = PtsY, PtsZ = PtsZ, PtsDist = PtsDist,
-       PtsAglXY = PtsAglXY, PtsAglXZ = PtsAglXZ, PtsAglTor = PtsAglTor)
+  data.frame(PtsX = PtsX, PtsY = PtsY, PtsZ = PtsZ, PtsDist = PtsDist,
+             PtsAglXY = PtsAglXY, PtsAglXZ = PtsAglXZ, PtsAglTor = PtsAglTor)
 }
