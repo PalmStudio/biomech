@@ -24,9 +24,9 @@
 #' - mass_left (kg): mass carried by the object, on the left side
 #'
 #' @return A [data.frame()]:
-#' - x: x coordinate (optional, only for plotting)
-#' - y: y coordinate (optional, only for plotting)
-#' - z: z coordinate (optional, only for plotting)
+#' - x: x coordinate
+#' - y: y coordinate
+#' - z: z coordinate
 #' - type: section type. 1: triangle (bottom-oriented); 2 : rectangle; 3 : triangle (top-oriented);
 #' 4 : ellipsis; 5 : circle.
 #' - width (m): section width
@@ -43,7 +43,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "deformation")
+#' filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
 #' df = read_mat(filepath)
 #' unbend(MOE = 2000, CIS = 400, df = df)
 #' }
@@ -107,7 +107,7 @@ unbend = function(MOE, CIS, df){
   # Evolution sinus, valeur arbitraire de dF
   # Le ratio dF/CIS est optimise
   dF = 0.1
-  DAppliPoidsFeuil = sin(XDistance / tail(XDistance,1) * pi) * dF
+  DAppliPoidsFeuil = sin(XDistance / utils::tail(XDistance,1) * pi) * dF
 
   #===============================================================================
   # Resultats

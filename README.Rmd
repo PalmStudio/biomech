@@ -1,0 +1,46 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# biomech
+
+<!-- badges: start -->
+[![R build status](https://github.com/PalmStudio/biomech/workflows/R-CMD-check/badge.svg)](https://github.com/PalmStudio/biomech/actions)
+<!-- badges: end -->
+
+`biomech` helps to compute bending and torsion of beams following the Euler-Bernoulli beam theory. It is specifically designed to be applied on
+tree branches (or e.g. palm leaves), but can be applyied to any other beam-shaped structure.
+
+## Installation
+
+You can install biomech from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("PalmStudio/biomech")
+```
+
+## Example
+
+Here is an example usage:
+
+```{r example}
+library(biomech)
+filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
+# Un-bending the field measurements:
+df = unbend(2000,400, read_mat(filepath))
+
+# (Re-)computing the deformation:
+bend(df, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
+```

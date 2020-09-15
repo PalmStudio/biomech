@@ -6,7 +6,7 @@
 #' @param vAngle_XY Angle between the segment and the XY plane (radian)
 #' @param vAngle_XZ Angle between the segment and the XZ plane (radian)
 #'
-#' @return
+#' @return Point coordinates
 #' @export
 #'
 Agl_Vers_XYZ = function(dist_P2P1, vAngle_XY, vAngle_XZ){

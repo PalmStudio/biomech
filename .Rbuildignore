@@ -11,3 +11,4 @@ man/figures
 ^codecov\.yml$
 ^bin$
 ^tmp$
+^\.github$

@@ -31,6 +31,6 @@ A formatted \code{\link[=data.frame]{data.frame()}}, with each row being a point
 Read the matrix from field measurements.
 }
 \examples{
-filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "deformation")
+filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
 df = read_mat(filepath)
 }

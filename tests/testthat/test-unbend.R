@@ -1,5 +1,5 @@
 library(data.table)
-filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "deformation")
+filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
 df = read_mat(filepath)
 
 

@@ -1,4 +1,4 @@
 library(testthat)
-library(deformation)
+library(biomech)
 
-test_check("deformation")
+test_check("biomech")

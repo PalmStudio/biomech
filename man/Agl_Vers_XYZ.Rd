@@ -14,7 +14,7 @@ Agl_Vers_XYZ(dist_P2P1, vAngle_XY, vAngle_XZ)
 \item{vAngle_XZ}{Angle between the segment and the XZ plane (radian)}
 }
 \value{
-
+Point coordinates
 }
 \description{
 Transform distances and angles into point coordinates

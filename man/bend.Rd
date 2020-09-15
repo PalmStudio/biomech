@@ -4,34 +4,58 @@
 \alias{bend}
 \title{Deform}
 \usage{
-bend(matPoints, pas, Ncalc, Nboucle, verbose = TRUE)
+bend(data, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
 }
 \arguments{
-\item{matPoints}{Point matrix}
+\item{data}{Point data.frame (see details).}
 
-\item{pas}{Length of the segments that discretize the object (m).}
+\item{step}{Length of the segments that discretize the object (m).}
 
-\item{Ncalc}{Number of points used in the grid discretizing the section.}
+\item{points}{Number of points used in the grid discretizing the section.}
 
-\item{Nboucle}{Number of iterations to compute the torsion and bending}
+\item{iterations}{Number of iterations to compute the torsion and bending}
 
 \item{verbose}{Boolean. Return information during procress?}
 }
 \value{
-A matrix: \link{PtsX; PtsY; PtsZ; PtsDist; PtsAglXY; PtsAglXZ; PtsAglTor}
+A \code{\link[=data.frame]{data.frame()}}:
+\itemize{
+\item x (m): X coordinate
+\item y (m): Y coordinate
+\item z (m): Z coordinate
+\item length (m): length of the section
+\item angle_xy (degree): angle of the segment with the XY plane
+\item angle_xz (degree): angle of the segment with the XZ plane
+\item torsion (degree): rotation angle of the segment
+}
 }
 \description{
 Compute the deformation by applying both bending and torsion
 }
+\details{
+The data argument is a \code{\link[=data.frame]{data.frame()}} with each row being a point and each column being:
+\itemize{
+\item x: x coordinate
+\item y: y coordinate
+\item z: z coordinate
+\item type: section type. 1: triangle (bottom-oriented); 2 : rectangle; 3 : triangle (top-oriented);
+4 : ellipsis; 5 : circle.
+\item width (m): section width
+\item height (m): section height
+\item mass (kg): mass of the section at the point
+\item mass_right (kg): mass carried by the object, on the right side
+\item mass_left (kg): mass carried by the object, on the left side
+\item elastic_modulus (MPa): elasticity modulus (bending)
+\item shear_modulus (MPa): shear modulus (torsion)
+\item inclination (degree): insertion angle of the first section (only first value is used)
+\item distance_application (m): application distances for the left and right weights
+}
+}
 \examples{
-library(data.table)
-filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "deformation")
-matPoints = unbend(2000,400, read_mat(filepath))
-# matPoints is the matrix of points with a straight line. So it reads
-# measured information that is already bent, and put it back to a straight line.
-pas= 0.02 # in meter. -> Length of the segments that discretize the object.
-Ncalc= 100 # number of points used in the grid that discretized the section.
-Nboucle= 15 # if we want to compute the torsion after the bending step by step instead of
-# all bending and then torsion.
-matRes = bend(matPoints, pas, Ncalc, Nboucle, TRUE); # Computes the deformation -> this is the actual model
+filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
+# Un-bending the field measurements:
+df = unbend(2000,400, read_mat(filepath))
+
+# (Re-)computing the deformation:
+matRes = bend(df, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
 }

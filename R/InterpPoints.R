@@ -21,7 +21,7 @@ InterpPoints = function(matPoints, pas){
   vAngle_XZ = XYZ_Agl$vAngle_XZ
 
   distLineique = cumsum(vDist_P2P1)
-  distTotale = tail(distLineique,1)
+  distTotale = utils::tail(distLineique,1)
 
   # Les distances des segments ne peuvent pas etre nulles
   # Le point origine (0,0,0) ne peut etre dans matPoints

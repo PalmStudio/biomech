@@ -12,11 +12,10 @@
 #' @export
 #'
 #' @examples
-#' library(data.table)
-#' filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "deformation")
+#' filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
 #' df = read_mat(filepath)
 #' df = unbend(2000,400,df)
-#' XYZ_Vers_Agl(df[1,],df[2,],df[3,])
+#' XYZ_Vers_Agl(df$x,df$y,df$z)
 #'
 XYZ_Vers_Agl = function(vecX, vecY, vecZ){
   N = length(vecX)

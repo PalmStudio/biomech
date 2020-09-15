@@ -16,9 +16,9 @@ unbend(MOE, CIS, df)
 \value{
 A \code{\link[=data.frame]{data.frame()}}:
 \itemize{
-\item x: x coordinate (optional, only for plotting)
-\item y: y coordinate (optional, only for plotting)
-\item z: z coordinate (optional, only for plotting)
+\item x: x coordinate
+\item y: y coordinate
+\item z: z coordinate
 \item type: section type. 1: triangle (bottom-oriented); 2 : rectangle; 3 : triangle (top-oriented);
 4 : ellipsis; 5 : circle.
 \item width (m): section width
@@ -57,7 +57,7 @@ df should be a formatted \code{\link[=data.frame]{data.frame()}}, with each row 
 }
 \examples{
 \dontrun{
-filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "deformation")
+filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
 df = read_mat(filepath)
 unbend(MOE = 2000, CIS = 400, df = df)
 }
