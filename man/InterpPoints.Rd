@@ -7,7 +7,7 @@
 InterpPoints(matPoints, pas)
 }
 \arguments{
-\item{matPoints}{Point matrix (from \code{\link[=CreaPoints]{CreaPoints()}})}
+\item{matPoints}{Point matrix (from \code{\link[=unbend]{unbend()}})}
 
 \item{pas}{Distance needed between interpolated points (m)}
 }

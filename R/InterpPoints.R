@@ -1,21 +1,16 @@
 #' Point interpolation
 #'
-#' @param matPoints Point matrix (from [CreaPoints()])
+#' @param matPoints Point matrix (from [unbend()])
 #' @param pas       Distance needed between interpolated points (m)
 #'
 #' @return A list.
 #' @export
 #'
 InterpPoints = function(matPoints, pas){
-  # Identification des lignes de la matrice
-  iX = 1
-  iY = 2
-  iZ = 3
-
   # Distance et angles de chaque segment P2P1
-  vX = matPoints[iX,]
-  vY = matPoints[iY,]
-  vZ = matPoints[iZ,]
+  vX = matPoints$x
+  vY = matPoints$y
+  vZ = matPoints$z
 
   # vDist_P2P1 : longueur de chaque segment
   # vAngle_XY : angle du segment avec le plan XY (radian)
@@ -36,7 +31,7 @@ InterpPoints = function(matPoints, pas){
   Nlin = round(distTotale / pas + 1)
   pas = distTotale / (Nlin - 1)
 
-  NpointsExp = ncol(matPoints)
+  NpointsExp = nrow(matPoints)
 
   vecDist = c(0, rep(pas, (Nlin - 1)))
   distInterp = cumsum(vecDist)

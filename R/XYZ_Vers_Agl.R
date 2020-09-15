@@ -15,7 +15,7 @@
 #' library(data.table)
 #' filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "deformation")
 #' df = read_mat(filepath)
-#' df = CreaPoints(2000,400,df)
+#' df = unbend(2000,400,df)
 #' XYZ_Vers_Agl(df[1,],df[2,],df[3,])
 #'
 XYZ_Vers_Agl = function(vecX, vecY, vecZ){

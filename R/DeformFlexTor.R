@@ -14,41 +14,25 @@
 #' @examples
 #' library(data.table)
 #' filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "deformation")
-#' df = read_mat(filepath)
-#' matPoints = CreaPoints(2000,400,df)
-#' # matPoints is the matrix of points for a straight rachis. So it reads
+#' matPoints = unbend(2000,400, read_mat(filepath))
+#' # matPoints is the matrix of points with a straight line. So it reads
 #' # measured information that is already bent, and put it back to a straight line.
 #' pas= 0.02 # in meter. -> Length of the segments that discretize the object.
 #' Ncalc= 100 # number of points used in the grid that discretized the section.
 #' Nboucle= 15 # if we want to compute the torsion after the bending step by step instead of
 #' # all bending and then torsion.
-#' matRes = DeformFlexTor(matPoints, pas, Ncalc, Nboucle, TRUE); # Computes the deformation -> this is the actual model
-DeformFlexTor = function(matPoints,pas,Ncalc,Nboucle,verbose = TRUE){
-
-  # Identification des lignes de la matrice
-  iX = 1
-  iY = 2
-  iZ = 3
-  iTypeSection = 4
-  iBase = 5
-  iHauteur = 6
-  iPoidsTige = 7
-  iPoidsFeuillesDroite = 8
-  iPoidsFeuillesGauche = 9
-  iModuleElasticite = 10
-  iModuleCisaillement = 11
-  iAngleSection = 12
-  iDAppliPoidsFeuil = 13
+#' matRes = bend(matPoints, pas, Ncalc, Nboucle, TRUE); # Computes the deformation -> this is the actual model
+bend = function(matPoints,pas,Ncalc,Nboucle,verbose = TRUE){
 
   vecRotFlex = matrix(0, ncol = 1, nrow = 3)
 
   # Nombre de points experimentaux
-  NpointsExp = ncol(matPoints)
+  NpointsExp = nrow(matPoints)
 
   # Distance et angles de chaque segment P2P1
-  vX = matPoints[iX,]
-  vY = matPoints[iY,]
-  vZ = matPoints[iZ,]
+  vX = matPoints$x
+  vY = matPoints$y
+  vZ = matPoints$z
 
   # vDist_P2P1 : longueur de chaque segment
   # vAngle_XY : angle du segment avec le plan XY (radian)
@@ -67,9 +51,9 @@ DeformFlexTor = function(matPoints,pas,Ncalc,Nboucle,verbose = TRUE){
   if(any(vDist_P2P1 == 0)) stop('Found distances between segments equal to 0.')
 
   # Poids lineique des segments
-  poidsTige = matPoints[iPoidsTige,]
-  poidsFeuilD = matPoints[iPoidsFeuillesDroite,]
-  poidsFeuilG = matPoints[iPoidsFeuillesGauche,]
+  poidsTige = matPoints$mass
+  poidsFeuilD = matPoints$mass_right
+  poidsFeuilG = matPoints$mass_left
 
   poidsLinTige = poidsTige / vDist_P2P1
   poidsLinFeuilD = poidsFeuilD / vDist_P2P1
@@ -86,16 +70,16 @@ DeformFlexTor = function(matPoints,pas,Ncalc,Nboucle,verbose = TRUE){
   pas = distTotale / (Nlin - 1)
   vecDist = (0 : (Nlin - 1)) * pas
 
-  vMOE = matPoints[iModuleElasticite,]
+  vMOE = matPoints$elastic_modulus
   vecMOE = approx(c(0,distLineique), c(vMOE[1], vMOE), vecDist, method = 'linear')$y
 
-  vG = matPoints[iModuleCisaillement,]
+  vG = matPoints$shear_modulus
   vecG = approx(c(0,distLineique), c(vG[1], vG), vecDist, method = 'linear')$y
 
-  vAngle_Tor = matPoints[iAngleSection,] * pi / 180 # (radian)
+  vAngle_Tor = matPoints$inclination * pi / 180 # (radian)
   vecAglTor = approx(c(0, distLineique), c(vAngle_Tor[1], vAngle_Tor), vecDist, method = 'linear')$y
 
-  vDAppliPoidsFeuil = matPoints[iDAppliPoidsFeuil,]
+  vDAppliPoidsFeuil = matPoints$distance_application
   vecDAppliPoidsFeuil = approx(c(0, distLineique), c(vDAppliPoidsFeuil[1], vDAppliPoidsFeuil),
                                vecDist, method = 'linear')$y
 
@@ -141,9 +125,9 @@ DeformFlexTor = function(matPoints,pas,Ncalc,Nboucle,verbose = TRUE){
     vIgFlex = vIgTor = vSr = rep(0, NpointsExp)
 
     for(iter in 1 : NpointsExp){
-      b = matPoints[iBase, iter]
-      h = matPoints[iHauteur, iter]
-      sct = matPoints[iTypeSection, iter]
+      b = matPoints$width[iter]
+      h = matPoints$height[iter]
+      sct = matPoints$type[iter]
       agDeg = SomCum_vecAglTor[iDiscretPtsExp[iter]] * 180 / pi # orientation section (degres)
 
       InertiaFlexRot = InertieFlexRota(b, h, agDeg, sct, Ncalc)
