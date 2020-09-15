@@ -10,12 +10,27 @@ read_mat(path)
 \item{path}{Path to the file}
 }
 \value{
-A formatted \code{\link[=data.frame]{data.frame()}}
+A formatted \code{\link[=data.frame]{data.frame()}}, with each row being a point and with columns being:
+\itemize{
+\item distance (m): distance between the previous point and this point (first value should be positive)
+\item type: section type. 1: triangle (bottom-oriented); 2 : rectangle; 3 : triangle (top-oriented);
+4 : ellipsis; 5 : circle.
+\item width (m): section width
+\item height (m): section height
+\item inclination (degree): insertion angle of the first point (only first value is used)
+\item torsion (degree): torsion angle
+\item x: x coordinate
+\item y: y coordinate
+\item z: z coordinate
+\item mass (kg): mass of the section at the point
+\item mass_right (kg): mass carried by the object, on the right side
+\item mass_left (kg): mass carried by the object, on the left side
+}
 }
 \description{
 Read the matrix from field measurements.
 }
 \examples{
 filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "deformation")
-matExp = read_mat(filepath)
+df = read_mat(filepath)
 }

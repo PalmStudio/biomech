@@ -14,8 +14,8 @@
 #' @examples
 #' library(data.table)
 #' filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "deformation")
-#' matExp = data.table::fread(filepath, data.table = FALSE)
-#' matPoints = CreaPoints(2000,400,matExp)
+#' df = read_mat(filepath)
+#' matPoints = CreaPoints(2000,400,df)
 #' # matPoints is the matrix of points for a straight rachis. So it reads
 #' # measured information that is already bent, and put it back to a straight line.
 #' pas= 0.02 # in meter. -> Length of the segments that discretize the object.

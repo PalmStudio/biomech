@@ -4,14 +4,14 @@
 \alias{CreaPoints}
 \title{Experimental matrix}
 \usage{
-CreaPoints(MOE, CIS, matExp)
+CreaPoints(MOE, CIS, df)
 }
 \arguments{
 \item{MOE}{Elastic modulus}
 
 \item{CIS}{Shear modulus}
 
-\item{matExp}{Experimental matrix}
+\item{df}{Experimental matrix (see details)}
 }
 \value{
 The point matrix
@@ -19,14 +19,31 @@ The point matrix
 \description{
 Build the matrix from the experimental points
 }
+\details{
+df should be a formatted \code{\link[=data.frame]{data.frame()}}, with each row being a point and with columns being:
+\itemize{
+\item distance (m): distance between the previous point and this point (first value should be positive)
+\item type: section type. 1: triangle (bottom-oriented); 2 : rectangle; 3 : triangle (top-oriented);
+4 : ellipsis; 5 : circle.
+\item width (m): section width
+\item height (m): section height
+\item inclination (degree): insertion angle of the first point (only first value is used)
+\item torsion (degree): torsion angle
+\item x: x coordinate (optional, only for plotting)
+\item y: y coordinate (optional, only for plotting)
+\item z: z coordinate (optional, only for plotting)
+\item mass (kg): mass of the section at the point
+\item mass_right (kg): mass carried by the object, on the right side
+\item mass_left (kg): mass carried by the object, on the left side
+}
+}
 \note{
-Lengths in meters, angles in degrees and mass in kg in matExp.
+Lengths in meters, angles in degrees and mass in kg in df.
 }
 \examples{
 \dontrun{
-library(data.table)
 filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "deformation")
-matExp = data.table::fread(filepath, data.table = FALSE)
-CreaPoints(2000,400,matExp)
+df = read_mat(filepath)
+CreaPoints(MOE = 2000, CIS = 400,df)
 }
 }

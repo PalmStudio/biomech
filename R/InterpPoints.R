@@ -6,7 +6,6 @@
 #' @return A list.
 #' @export
 #'
-#' @examples
 InterpPoints = function(matPoints, pas){
   # Identification des lignes de la matrice
   iX = 1

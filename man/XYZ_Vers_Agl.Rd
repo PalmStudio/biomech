@@ -27,8 +27,8 @@ Title
 \examples{
 library(data.table)
 filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "deformation")
-matExp = data.table::fread(filepath, data.table = FALSE)
-matExp = CreaPoints(2000,400,matExp)
-XYZ_Vers_Agl(matExp[1,],matExp[2,],matExp[3,])
+df = read_mat(filepath)
+df = CreaPoints(2000,400,df)
+XYZ_Vers_Agl(df[1,],df[2,],df[3,])
 
 }

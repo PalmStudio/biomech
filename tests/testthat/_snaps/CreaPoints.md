@@ -1,7 +1,7 @@
 # CreaPoints works
 
     Code
-      CreaPoints(2000, 400, matExp)
+      CreaPoints(2000, 400, df)
     Output
                     [,1]         [,2]         [,3]         [,4]         [,5]
        [1,] 6.586895e-04 8.833026e-01 1.765946e+00 2.273137e+00 2.780328e+00
