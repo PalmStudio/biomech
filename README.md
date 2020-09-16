@@ -61,3 +61,5 @@ You can even make 3d plots using `plot_bent_3d()`:
 ``` r
 plot_bent_3d(df_bend,df)
 ```
+
+<img src="www/bent.png" width="100%" />
