@@ -42,7 +42,8 @@
 #'
 #' # (Re-)computing the deformation:
 #' df_bend = bend(df, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
-bend = function(data, step = 0.02, points = 100, iterations = 15, verbose = TRUE){
+bend = function(data, step = 0.02, points = 100,
+                iterations = 15, verbose = TRUE){
 
   vecRotFlex = matrix(0, ncol = 1, nrow = 3)
 
@@ -96,7 +97,7 @@ bend = function(data, step = 0.02, points = 100, iterations = 15, verbose = TRUE
   vG = data$shear_modulus
   vecG = stats::approx(c(0,distLineique), c(vG[1], vG), vecDist, method = 'linear')$y
 
-  vAngle_Tor = data$inclination * pi / 180 # (radian)
+  vAngle_Tor = data$torsion * pi / 180 # (radian)
   vecAglTor = stats::approx(c(0, distLineique), c(vAngle_Tor[1], vAngle_Tor), vecDist, method = 'linear')$y
 
   vDAppliPoidsFeuil = data$distance_application

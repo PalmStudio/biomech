@@ -116,7 +116,7 @@ unbend = function(MOE, CIS, df){
                   mass_left = PoidsFeuillesGauche,
                   elastic_modulus = ModuleElasticite,
                   shear_modulus = ModuleCisaillement,
-                  inclination = AngleSection,
+                  torsion = AngleSection,
                   distance_application = DAppliPoidsFeuil)
   class(df) = append("unbent",class(df))
   df
