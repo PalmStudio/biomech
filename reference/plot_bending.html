@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • biomech</title>
+<title>Plot bent — plot_bending • biomech</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Plot bent — plot_bending" />
+<meta property="og:description" content="Plot bent" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -100,102 +101,50 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Plot bent</h1>
+    
+    <div class="hidden name"><code>plot_bending.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Plot bent</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>plot_bending</span>(<span class='kw'>bent</span>, unbent = <span class='kw'>NULL</span>, <span class='kw'>...</span>)
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="Agl_Vers_XYZ.html">Agl_Vers_XYZ()</a></code> </p>
-        </td>
-        <td><p>Distances and angles to coordinates</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="InertieFlexRota.html">InertieFlexRota()</a></code> </p>
-        </td>
-        <td><p>Inertia and surface</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="InterpPoints.html">InterpPoints()</a></code> </p>
-        </td>
-        <td><p>Point interpolation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Remplir.html">Remplir()</a></code> </p>
-        </td>
-        <td><p>Fill in the matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Rota_Inverse_YZ.html">Rota_Inverse_YZ()</a></code> </p>
-        </td>
-        <td><p>Inverse rotation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Rota_YZ.html">Rota_YZ()</a></code> </p>
-        </td>
-        <td><p>Rotate</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="XYZ_Vers_Agl.html">XYZ_Vers_Agl()</a></code> </p>
-        </td>
-        <td><p>Title</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="bend.html">bend()</a></code> </p>
-        </td>
-        <td><p>Deform</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot_bending.html">plot_bending()</a></code> <code><a href="plot_bending.html">plot_bending_3d()</a></code> </p>
-        </td>
-        <td><p>Plot bent</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="read_mat.html">read_mat()</a></code> </p>
-        </td>
-        <td><p>Read field matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="unbend.html">unbend()</a></code> </p>
-        </td>
-        <td><p>Unbend</p></td>
-      </tr>
-    </tbody>
+<span class='fu'>plot_bending_3d</span>(<span class='kw'>bent</span>, unbent = <span class='kw'>NULL</span>, <span class='kw'>...</span>)</pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>bent</th>
+      <td><p>Bent data.frame</p></td>
+    </tr>
+    <tr>
+      <th>unbent</th>
+      <td><p>Initial state data.frame (as from <code><a href='unbend.html'>unbend()</a></code>)</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Further parameters.</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A plotly object, see <code><a href='https://rdrr.io/pkg/plotly/man/plot_ly.html'>plotly::plot_ly()</a></code></p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>filepath</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/6_EW01.22_17_kanan.txt"</span>, package = <span class='st'>"biomech"</span>)
+<span class='co'># Un-bending the field measurements:</span>
+<span class='kw'>df</span> <span class='op'>=</span> <span class='fu'><a href='unbend.html'>unbend</a></span>(<span class='fl'>2000</span>,<span class='fl'>400</span>, <span class='fu'><a href='read_mat.html'>read_mat</a></span>(<span class='kw'>filepath</span>))
+<span class='kw'>df_bend</span> <span class='op'>=</span> <span class='fu'><a href='bend.html'>bend</a></span>(<span class='kw'>df</span>, step = <span class='fl'>0.02</span>, points = <span class='fl'>100</span>, iterations = <span class='fl'>15</span>, verbose = <span class='fl'>TRUE</span>)
+</div><div class='output co'>#&gt;  Final torsion angle at the tip (degree) =  12.52822</div><div class='input'><span class='fu'>plot_bending</span>(<span class='kw'>df_bend</span>,<span class='kw'>df</span>)
+</div><div class='img'><img src='plot_bending-1.png' alt='' width='700' height='433' /></div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
