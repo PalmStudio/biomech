@@ -57,5 +57,5 @@ filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
 df = unbend(2000,400, read_mat(filepath))
 
 # (Re-)computing the deformation:
-matRes = bend(df, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
+df_bend = bend(df, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
 }

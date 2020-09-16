@@ -16,4 +16,7 @@ RoxygenNote: 7.1.1
 Suggests:
     testthat
 Imports: 
-    data.table
+    data.table,
+    patchwork,
+    ggplot2,
+    magrittr

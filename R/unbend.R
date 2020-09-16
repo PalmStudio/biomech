@@ -111,12 +111,14 @@ unbend = function(MOE, CIS, df){
 
   #===============================================================================
   # Resultats
-  data.frame(x= X, y = Y, z = Z, type = TypeSection, width = Base,
-             height = Hauteur, mass = PoidsTige, mass_right = PoidsFeuillesDroite,
-             mass_left = PoidsFeuillesGauche,
-             elastic_modulus = ModuleElasticite,
-             shear_modulus = ModuleCisaillement,
-             inclination = AngleSection,
-             distance_application = DAppliPoidsFeuil)
+  df = data.frame(x= X, y = Y, z = Z, type = TypeSection, width = Base,
+                  height = Hauteur, mass = PoidsTige, mass_right = PoidsFeuillesDroite,
+                  mass_left = PoidsFeuillesGauche,
+                  elastic_modulus = ModuleElasticite,
+                  shear_modulus = ModuleCisaillement,
+                  inclination = AngleSection,
+                  distance_application = DAppliPoidsFeuil)
+  class(df) = append("unbent",class(df))
+  df
 }
 

@@ -41,7 +41,7 @@
 #' df = unbend(2000,400, read_mat(filepath))
 #'
 #' # (Re-)computing the deformation:
-#' matRes = bend(df, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
+#' df_bend = bend(df, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
 bend = function(data, step = 0.02, points = 100, iterations = 15, verbose = TRUE){
 
   vecRotFlex = matrix(0, ncol = 1, nrow = 3)

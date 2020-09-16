@@ -13,3 +13,4 @@ man/figures
 ^tmp$
 ^\.github$
 .test$
+www
