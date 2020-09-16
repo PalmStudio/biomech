@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Deform — bend • biomech</title>
+<title>Plot unbent — plot_unbent • biomech</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Deform — bend" />
-<meta property="og:description" content="Compute the deformation by applying both bending and torsion" />
+<meta property="og:title" content="Plot unbent — plot_unbent" />
+<meta property="og:description" content="Plot unbent" />
 
 
 
@@ -103,82 +103,44 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Deform</h1>
+    <h1>Plot unbent</h1>
     
-    <div class="hidden name"><code>bend.Rd</code></div>
+    <div class="hidden name"><code>plot_unbent.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Compute the deformation by applying both bending and torsion</p>
+    <p>Plot unbent</p>
     </div>
 
-    <pre class="usage"><span class='fu'>bend</span>(<span class='kw'>data</span>, step = <span class='fl'>0.02</span>, points = <span class='fl'>100</span>, iterations = <span class='fl'>15</span>, verbose = <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>plot_unbent</span>(<span class='kw'>unbent</span>, meas = <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>Point data.frame (see details).</p></td>
+      <th>unbent</th>
+      <td><p>Unbent data.frame</p></td>
     </tr>
     <tr>
-      <th>step</th>
-      <td><p>Length of the segments that discretize the object (m).</p></td>
+      <th>meas</th>
+      <td><p>Field measurement data.frame (as from <code><a href='read_mat.html'>read_mat()</a></code>)</p></td>
     </tr>
     <tr>
-      <th>points</th>
-      <td><p>Number of points used in the grid discretizing the section.</p></td>
-    </tr>
-    <tr>
-      <th>iterations</th>
-      <td><p>Number of iterations to compute the torsion and bending</p></td>
-    </tr>
-    <tr>
-      <th>verbose</th>
-      <td><p>Boolean. Return information during procress?</p></td>
+      <th>...</th>
+      <td><p>Further parameters.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code><a href='https://rdrr.io/r/base/data.frame.html'>data.frame()</a></code>:</p><ul>
-<li><p>x (m): X coordinate</p></li>
-<li><p>y (m): Y coordinate</p></li>
-<li><p>z (m): Z coordinate</p></li>
-<li><p>length (m): length of the section</p></li>
-<li><p>angle_xy (degree): angle of the segment with the XY plane</p></li>
-<li><p>angle_xz (degree): angle of the segment with the XZ plane</p></li>
-<li><p>torsion (degree): rotation angle of the segment</p></li>
-</ul>
-
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The data argument is a <code><a href='https://rdrr.io/r/base/data.frame.html'>data.frame()</a></code> with each row being a point and each column being:</p><ul>
-<li><p>x: x coordinate</p></li>
-<li><p>y: y coordinate</p></li>
-<li><p>z: z coordinate</p></li>
-<li><p>type: section type. 1: triangle (bottom-oriented); 2 : rectangle; 3 : triangle (top-oriented);
-4 : ellipsis; 5 : circle.</p></li>
-<li><p>width (m): section width</p></li>
-<li><p>height (m): section height</p></li>
-<li><p>mass (kg): mass of the section at the point</p></li>
-<li><p>mass_right (kg): mass carried by the object, on the right side</p></li>
-<li><p>mass_left (kg): mass carried by the object, on the left side</p></li>
-<li><p>elastic_modulus (MPa): elasticity modulus (bending)</p></li>
-<li><p>shear_modulus (MPa): shear modulus (torsion)</p></li>
-<li><p>inclination (degree): insertion angle of the first section (only first value is used)</p></li>
-<li><p>distance_application (m): application distances for the left and right weights</p></li>
-</ul>
-
+    <p>A plotly object, see <code>plotly::plot_ly()</code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>filepath</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/6_EW01.22_17_kanan.txt"</span>, package = <span class='st'>"biomech"</span>)
-<span class='co'># Un-bending the field measurements:</span>
-<span class='kw'>df</span> <span class='op'>=</span> <span class='fu'><a href='unbend.html'>unbend</a></span>(<span class='fl'>2000</span>,<span class='fl'>400</span>, <span class='fu'><a href='read_mat.html'>read_mat</a></span>(<span class='kw'>filepath</span>))
-
-<span class='co'># (Re-)computing the deformation:</span>
-<span class='kw'>df_bend</span> <span class='op'>=</span> <span class='fu'>bend</span>(<span class='kw'>df</span>, step = <span class='fl'>0.02</span>, points = <span class='fl'>100</span>, iterations = <span class='fl'>15</span>, verbose = <span class='fl'>TRUE</span>)
-</div><div class='output co'>#&gt;  Final torsion angle at the tip (degree) =  12.52822</div></pre>
+<span class='kw'>meas</span> <span class='op'>=</span> <span class='fu'><a href='read_mat.html'>read_mat</a></span>(<span class='kw'>filepath</span>)
+<span class='kw'>df_unbend</span> <span class='op'>=</span> <span class='fu'><a href='unbend.html'>unbend</a></span>(MOE = <span class='fl'>2000</span>, CIS = <span class='fl'>400</span>, df = <span class='kw'>meas</span>)
+<span class='fu'>plot_unbent</span>(<span class='kw'>df_unbend</span>,<span class='kw'>meas</span>)
+</div><div class='output co'>#&gt; <span class='error'>Error in plot_ly(unbent, x = ~x, y = ~y, z = ~z, type = "scatter3d", mode = "lines",     name = "Un-bent"): could not find function "plot_ly"</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
