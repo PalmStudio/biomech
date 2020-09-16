@@ -49,7 +49,7 @@ df_bend
 You can plot the results using:
 
 ```{r}
-plot_bent(bent = df_bend, unbent = df)
+plot_bending(bent = df_bend, unbent = df)
 ```
 
 Note that the `unbent` argument is optional but can be very usefull to compare with the initial conditions.
@@ -57,7 +57,7 @@ Note that the `unbent` argument is optional but can be very usefull to compare w
 You can even make 3d plots using `plot_bent_3d()`:
 
 ```{r eval=FALSE}
-plot_bent_3d(df_bend,df)
+plot_bending_3d(df_bend,df)
 ```
 
 ```{r echo=FALSE}

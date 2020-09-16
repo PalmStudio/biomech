@@ -19,4 +19,6 @@ Imports:
     data.table,
     patchwork,
     ggplot2,
-    magrittr
+    magrittr,
+    plotly,
+    rlang
