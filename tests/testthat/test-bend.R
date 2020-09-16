@@ -1,4 +1,3 @@
-library(data.table)
 filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
 df = unbend(2000,400,read_mat(filepath))
 
@@ -7,6 +6,8 @@ Ncalc= 100 # number of points used in the grid that discretized the section.
 Nboucle= 15 # if we want to compute the torsion after the bending step by step instead of
 
 test_that("bend works", {
-  testthat::expect_snapshot(bend(data = df, pas, Ncalc, Nboucle,
-                                 verbose = TRUE))
+  # expect_snapshot(bend(data = df, pas, Ncalc, Nboucle,
+  #                                verbose = TRUE))
+  expect_known_output(bend(data = df, pas, Ncalc, Nboucle,
+                           verbose = TRUE), file = "bend.test")
 })
