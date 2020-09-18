@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • biomech</title>
+<title>Compute error — compute_error • biomech</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,9 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Compute error — compute_error" />
+<meta property="og:description" content="Compute the error of simulation usin field data, field data that is
+un-bent, and bending parameters. Mainly used from optimize_bend()." />
 
 
 
@@ -58,7 +60,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -100,114 +102,63 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Compute error</h1>
+    
+    <div class="hidden name"><code>compute_error.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Compute the error of simulation usin field data, field data that is
+un-bent, and bending parameters. Mainly used from <code><a href='optimize_bend.html'>optimize_bend()</a></code>.</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>compute_error</span>(
+  <span class='kw'>x</span>,
+  <span class='kw'>y</span>,
+  <span class='kw'>field_data</span>,
+  <span class='kw'>unbent_data</span>,
+  type = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"all"</span>, <span class='st'>"bending"</span>, <span class='st'>"torsion"</span>),
+  <span class='kw'>...</span>
+)</pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="Agl_Vers_XYZ.html">Agl_Vers_XYZ()</a></code> </p>
-        </td>
-        <td><p>Distances and angles to coordinates</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="InertieFlexRota.html">InertieFlexRota()</a></code> </p>
-        </td>
-        <td><p>Inertia and surface</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="InterpPoints.html">InterpPoints()</a></code> </p>
-        </td>
-        <td><p>Point interpolation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Remplir.html">Remplir()</a></code> </p>
-        </td>
-        <td><p>Fill in the matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Rota_Inverse_YZ.html">Rota_Inverse_YZ()</a></code> </p>
-        </td>
-        <td><p>Inverse rotation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Rota_YZ.html">Rota_YZ()</a></code> </p>
-        </td>
-        <td><p>Rotate</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="XYZ_Vers_Agl.html">XYZ_Vers_Agl()</a></code> </p>
-        </td>
-        <td><p>Title</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="bend.html">bend()</a></code> </p>
-        </td>
-        <td><p>Deform</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="distance_weight_sine.html">distance_weight_sine()</a></code> </p>
-        </td>
-        <td><p>Weight distance of application</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="optimize_bend.html">optimize_bend()</a></code> </p>
-        </td>
-        <td><p>Optimize bending parameters</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot_bending.html">plot_bending()</a></code> <code><a href="plot_bending.html">plot_bending_3d()</a></code> </p>
-        </td>
-        <td><p>Plot bent</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="read_mat.html">read_mat()</a></code> </p>
-        </td>
-        <td><p>Read field matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="unbend.html">unbend()</a></code> </p>
-        </td>
-        <td><p>Unbend</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x, y</th>
+      <td><p>Either the elasticity modulus (bending, MPa) or Shear modulus (torsion, MPa) (see dtails)</p></td>
+    </tr>
+    <tr>
+      <th>field_data</th>
+      <td><p>Field data (data.frame of x, y and z coordinates of the points)</p></td>
+    </tr>
+    <tr>
+      <th>unbent_data</th>
+      <td><p>Output from <code><a href='unbend.html'>unbend(field_data)</a></code> + <code><a href='distance_weight_sine.html'>distance_weight_sine()</a></code></p></td>
+    </tr>
+    <tr>
+      <th>type</th>
+      <td><p>Type of optimization (either "bending","torsion" or "all")</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Further parameters to pass to <code><a href='bend.html'>bend()</a></code></p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>The quadratic error of simulation</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>x an y depends on the optimization type. <code>x</code> is the elasticity modulus if "bending",
+or shear modulus if "torsion". The <code>y</code> is the contrary. This is due to
+the fact that <code><a href='https://rdrr.io/r/stats/optimize.html'>stats::optimize()</a></code> always use the first argument for optimization.
+If <code>type == "all"</code>, then <code>x</code> is the elasticity modulus.</p>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

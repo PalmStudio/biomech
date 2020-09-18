@@ -65,53 +65,152 @@
 <a href="#biomech" class="anchor"></a>biomech</h1></div>
 <!-- badges: start -->
 
-<p><code>biomech</code> helps to compute bending and torsion of beams following the Euler-Bernoulli beam theory. It is specifically designed to be applied on tree branches (or e.g. palm leaves), but can be applyied to any other beam-shaped structure.</p>
-<div id="installation" class="section level2">
+<p><code>biomech</code> aims at computing bending and torsion of beams following the Euler-Bernoulli beam theory. It is specifically designed to be applied on tree branches (or e.g. palm leaves), but can be applied to any other beam-shaped structure.</p>
+<div id="table-of-contents" class="section level2">
 <h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<a href="#table-of-contents" class="anchor"></a>Table of Contents</h2>
+<ul>
+<li><a href="#1-installation">1. Installation</a></li>
+<li>
+<a href="#2-examples">2. Examples</a>
+<ul>
+<li>
+<a href="#21-example-field-data">2.1 Example field data</a>
+<ul>
+<li><a href="#211-presentation">2.1.1 Presentation</a></li>
+<li><a href="#211-un-bending">2.1.2 Un-bending</a></li>
+</ul>
+</li>
+<li><a href="#22-bending-model">2.2 Bending model</a></li>
+<li><a href="#23-plotting">2.3 Plotting</a></li>
+<li><a href="#24-optimization">2.4 Optimization</a></li>
+<li><a href="#3-references">3. References</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="1-installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#1-installation" class="anchor"></a>1. Installation</h2>
 <p>You can install biomech from <a href="https://github.com/">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="co"># install.packages("devtools")</span>
 <span class="kw">devtools</span>::<span class="fu">install_github</span>(<span class="st">"PalmStudio/biomech"</span>)
 </pre></div>
 </div>
-<div id="example" class="section level2">
+<div id="2-examples" class="section level2">
 <h2 class="hasAnchor">
-<a href="#example" class="anchor"></a>Example</h2>
-<p>Here is an example usage:</p>
+<a href="#2-examples" class="anchor"></a>2. Examples</h2>
+<p>The bending function (<code><a href="reference/bend.html">bend()</a></code>) uses two parameters: the elastic modulus, and the shear modulus. A good introduction to these concepts is available on <a href="https://en.wikipedia.org/wiki/Euler%E2%80%93Bernoulli_beam_theory">wikipedia</a></p>
+<p>In our examples, these parameters are unknown at first, but they can be computed from field data.</p>
+<div id="21-example-field-data" class="section level3">
+<h3 class="hasAnchor">
+<a href="#21-example-field-data" class="anchor"></a>2.1 Example field data</h3>
+<div id="211-presentation" class="section level4">
+<h4 class="hasAnchor">
+<a href="#211-presentation" class="anchor"></a>2.1.1 Presentation</h4>
+<p>Our field data consist on measurements made along the leaf of a palm plant. The leaf is discretized into 5 segments. each segment is defined by a single point at the beginning of the segment representing its cross-section, with attributes such as its dimensions (width, height) and shape (=<code>type</code>), the distance from the last point to the current point, the inclination and torsion at the first point, the x, y and z positions of the point (used to cross-validate), the mass of the rachis and of the leaflets on the right and on the left separately.</p>
+<p>Here is a little depiction of the information:</p>
+<p><img src="https://raw.githubusercontent.com/PalmStudio/biomech/master/www/palm_leaf.png"></p>
+<p>See (Perez 2017) for more information about the subject.</p>
+<p>The example field data is available from the package and can be read using:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">biomech</span>)
 <span class="kw">file_path</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata/6_EW01.22_17_kanan.txt"</span>, package = <span class="st">"biomech"</span>)
 <span class="kw">field_data</span> <span class="op">=</span> <span class="fu"><a href="reference/read_mat.html">read_mat</a></span>(<span class="kw">file_path</span>)
+</pre></div>
+<p>Here is what it looks like:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">#&gt;    distance type   width  height inclination torsion     x     y    z   mass</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co">#&gt; V1     0.00    1 0.07550 0.04110        48.8       4 0.000 0.000 0.00 0.0000</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="co">#&gt; V2     1.34    2 0.03291 0.03030        48.8       4 1.110 0.250 0.79 1.3036</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="co">#&gt; V3     1.34    3 0.01810 0.02982        48.8       4 2.196 0.275 1.07 0.6466</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co">#&gt; V4     0.77    4 0.01144 0.01121        48.8       4 3.056 0.380 1.01 0.1230</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="co">#&gt; V5     0.77    5 0.00100 0.00100        48.8       4 3.791 0.530 0.42 0.0347</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="co">#&gt;    mass_right mass_left</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="co">#&gt; V1     0.0000    0.0000</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="co">#&gt; V2     0.1339    0.1654</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="co">#&gt; V3     0.4388    0.4828</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="co">#&gt; V4     0.2568    0.2411</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="co">#&gt; V5     0.0962    0.1020</span></span></code></pre></div>
+</div>
+<div id="212-un-bending" class="section level4">
+<h4 class="hasAnchor">
+<a href="#212-un-bending" class="anchor"></a>2.1.2 Un-bending</h4>
+<p>We can use the field data to try our bending model. But first, it must be “un-bent” back to a straight line. This is made using <code><a href="reference/unbend.html">unbend()</a></code>, such as:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="co"># Un-bending the field measurements:</span>
 <span class="kw">df_unbent</span> <span class="op">=</span> <span class="fu"><a href="reference/unbend.html">unbend</a></span>(<span class="kw">field_data</span>)
-
-<span class="co"># Adding the distance of application of the left and right weight:</span>
-<span class="kw">df_unbent</span><span class="op">$</span><span class="kw">distance_application</span> <span class="op">=</span> <span class="fu"><a href="reference/distance_weight_sine.html">distance_weight_sine</a></span>(<span class="kw">df_unbent</span><span class="op">$</span><span class="kw">x</span>)
-
-<span class="co"># (Re-)computing the deformation:</span>
-<span class="kw">df_bent</span> <span class="op">=</span> <span class="fu"><a href="reference/bend.html">bend</a></span>(<span class="kw">df_unbent</span>, elastic_modulus = <span class="fl">1200</span>, shear_modulus = <span class="fl">100</span>, step = <span class="fl">0.02</span>, points = <span class="fl">100</span>, iterations = <span class="fl">15</span>, verbose = <span class="fl">TRUE</span>)
-<span class="co">#&gt;  Final torsion angle at the tip (degree) =  37.91962</span>
-
-<span class="kw">df_bent</span>
-<span class="co">#&gt;          x            y         z    length   angle_xy     angle_xz   torsion</span>
-<span class="co">#&gt; 1 0.000000 0.0000000000 0.0000000 0.0000000   0.000000  0.000000000  4.000000</span>
-<span class="co">#&gt; 2 1.085347 0.0001879442 0.7668137 1.3289023  35.241771  0.009921628  4.130507</span>
-<span class="co">#&gt; 3 2.390765 0.0086790523 1.0299259 1.3316966  11.395287  0.372675923  6.727513</span>
-<span class="co">#&gt; 4 3.154218 0.0675902388 0.9025891 0.7762381  -9.441675  4.412435490 16.918753</span>
-<span class="co">#&gt; 5 3.712503 0.2987318001 0.4561007 0.7513063 -36.461526 22.490548518 37.919620</span>
 </pre></div>
-<p>You can plot the results using:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
+</div>
+</div>
+<div id="22-bending-model" class="section level3">
+<h3 class="hasAnchor">
+<a href="#22-bending-model" class="anchor"></a>2.2 Bending model</h3>
+<p>We can use <code><a href="reference/bend.html">bend()</a></code> to bend a straight beam providing initial values and known elastic and shear modulus.</p>
+<p>We can try it out on our example leaf data. But first, we have to compute a variable that is missing from our <code>df_unbent</code> data.frame: the distance of application of the mass of the leaflets on the right and left sides of each segment. We can approximate this using a sine function:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="co"># Adding the distance of application of the left and right weight (leaflets):</span>
+<span class="kw">df_unbent</span><span class="op">$</span><span class="kw">distance_application</span> <span class="op">=</span> <span class="fu"><a href="reference/distance_weight_sine.html">distance_weight_sine</a></span>(<span class="kw">df_unbent</span><span class="op">$</span><span class="kw">x</span>)
+</pre></div>
+<p>Know we’re ready to go with our model, using some expert knowledge to estimate the elastic and shear modulus:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="co"># (Re-)computing the deformation:</span>
+<span class="kw">df_bent</span> <span class="op">=</span> <span class="fu"><a href="reference/bend.html">bend</a></span>(<span class="kw">df_unbent</span>, elastic_modulus = <span class="fl">2000</span>, shear_modulus = <span class="fl">400</span>)
+<span class="co">#&gt;  Final torsion angle at the tip (degree) =  12.52822</span>
+</pre></div>
+</div>
+<div id="23-plotting" class="section level3">
+<h3 class="hasAnchor">
+<a href="#23-plotting" class="anchor"></a>2.3 Plotting</h3>
+<p>We can now plot the results using <code><a href="reference/plot_bending.html">plot_bending()</a></code>. We want to compare the observed data with the simulated data. We also want to check if the straight line was right. Let’s put all three on a single plot:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit">
 <span class="fu"><a href="reference/plot_bending.html">plot_bending</a></span>(Observed = <span class="kw">field_data</span>, <span class="st">"Un-Bent obs."</span> = <span class="kw">df_unbent</span>, Modeled = <span class="kw">df_bent</span>)
 </pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-2-1.png" width="100%"></p>
-<p>Note that the <code>unbent</code> argument is optional but can be very usefull to compare with the initial conditions.</p>
-<p>You can even make 3d plots using <code>plot_bent_3d()</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
+<p><img src="reference/figures/README-unnamed-chunk-6-1.png" width="100%"></p>
+<p>We can even make a 3d plots using <code>plot_bent_3d()</code>:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit">
 <span class="fu"><a href="reference/plot_bending.html">plot_bending_3d</a></span>(Observed = <span class="kw">field_data</span>, <span class="st">"Un-Bent obs."</span> = <span class="kw">df_unbent</span>, Modeled = <span class="kw">df_bent</span>)
 </pre></div>
 <p><img src="https://raw.githubusercontent.com/PalmStudio/biomech/master/www/bent.png"></p>
+<p>OK, not bad. But the adjustment is not really that close to the measurement.</p>
+</div>
+<div id="24-optimization" class="section level3">
+<h3 class="hasAnchor">
+<a href="#24-optimization" class="anchor"></a>2.4 Optimization</h3>
+<p><code><a href="reference/optimize_bend.html">optimize_bend()</a></code> can help us find out the right values for both our parameters:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit">
+<span class="kw">params</span> <span class="op">=</span> <span class="fu"><a href="reference/optimize_bend.html">optimize_bend</a></span>(<span class="kw">field_data</span>, type = <span class="st">"all"</span>)
+</pre></div>
+<p>Here are our optimized values:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit">
+<span class="kw">params</span>
+<span class="co">#&gt; $elastic_modulus</span>
+<span class="co">#&gt; [1] 1209.396</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $shear_modulus</span>
+<span class="co">#&gt; [1] 67.44096</span>
+</pre></div>
+<p>And here is a the resulting plot:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit">
+<span class="kw">df_bent_optim</span> <span class="op">=</span> <span class="fu"><a href="reference/bend.html">bend</a></span>(<span class="kw">df_unbent</span>, elastic_modulus = <span class="kw">params</span><span class="op">$</span><span class="kw">elastic_modulus</span>,
+                     shear_modulus = <span class="kw">params</span><span class="op">$</span><span class="kw">shear_modulus</span>)
+<span class="co">#&gt;  Final torsion angle at the tip (degree) =  53.80096</span>
+
+<span class="fu"><a href="reference/plot_bending.html">plot_bending</a></span>(Observed = <span class="kw">field_data</span>, <span class="st">"Un-Bent obs."</span> = <span class="kw">df_unbent</span>, 
+             Modeled = <span class="kw">df_bent</span>,
+             <span class="st">"Modeled (optimized)"</span> = <span class="kw">df_bent_optim</span>)
+</pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-11-1.png" width="100%"></p>
+</div>
+</div>
+<div id="3-references" class="section level2">
+<h2 class="hasAnchor">
+<a href="#3-references" class="anchor"></a>3. References</h2>
+<div id="refs" class="references hanging-indent">
+<div id="ref-perezAnalyzingModellingGenetic2017">
+<p>Perez, Raphaël. 2017. “Analyzing and Modelling the Genetic Variability of Aerial Architecture and Light Interception of Oil Palm (Elaeis Guineensis Jacq).” PhD thesis, Montpellier, SupAgro.</p>
+</div>
+</div>
 </div>
 </div>
   </div>
