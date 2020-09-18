@@ -57,7 +57,8 @@ plot_bending = function(...){
     ggplot2::geom_line()+
     ggplot2::coord_cartesian(xlim = plot_range,
                              ylim = plot_range)+
-    ggplot2::ggtitle("Side view")
+    ggplot2::ggtitle("Side view")+
+    ggplot2::labs(colour = NULL)
 
   top_view =
     ggplot2::ggplot(data = df, ggplot2::aes(x = .data$x, y = .data$y,
@@ -66,7 +67,8 @@ plot_bending = function(...){
     ggplot2::coord_cartesian(xlim = plot_range,
                              ylim = c(-plot_range_max,
                                       plot_range_max))+
-    ggplot2::ggtitle("Top view")
+    ggplot2::ggtitle("Top view")+
+    ggplot2::labs(colour = NULL)
 
   patchwork::wrap_plots(side_view, top_view, guides = 'collect')  &
     ggplot2::theme(legend.position='bottom')

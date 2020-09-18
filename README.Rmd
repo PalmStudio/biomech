@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 `biomech` helps to compute bending and torsion of beams following the Euler-Bernoulli beam theory. It is specifically designed to be applied on
-tree branches (or e.g. palm leaves), but can be applyied to any other beam-shaped structure.
+tree branches (or e.g. palm leaves), but can be applied to any other beam-shaped structure.
 
 ## Installation
 
