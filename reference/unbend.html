@@ -40,9 +40,8 @@
 
 
 <meta property="og:title" content="Unbend — unbend" />
-<meta property="og:description" content="Takes measurements from field that are already bent (torsion + bending) and transform them
-to a straight line (un-bending).
-Mainly used to compute the matrix for input to bend() from experimental points." />
+<meta property="og:description" content="Remove torsion and bending of a bent beam, i.e. transform it
+into a straight line, while keeping its insertion angle (inclination angle of the first segment)." />
 
 
 
@@ -111,24 +110,15 @@ Mainly used to compute the matrix for input to bend() from experimental points."
     </div>
 
     <div class="ref-description">
-    <p>Takes measurements from field that are already bent (torsion + bending) and transform them
-to a straight line (un-bending).
-Mainly used to compute the matrix for input to <code><a href='bend.html'>bend()</a></code> from experimental points.</p>
+    <p>Remove torsion and bending of a bent beam, i.e. transform it
+into a straight line, while keeping its insertion angle (inclination angle of the first segment).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>unbend</span>(<span class='kw'>MOE</span>, <span class='kw'>CIS</span>, <span class='kw'>df</span>)</pre>
+    <pre class="usage"><span class='fu'>unbend</span>(<span class='kw'>df</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>MOE</th>
-      <td><p>Elastic modulus</p></td>
-    </tr>
-    <tr>
-      <th>CIS</th>
-      <td><p>Shear modulus</p></td>
-    </tr>
     <tr>
       <th>df</th>
       <td><p>Experimental data (usually read using <code><a href='read_mat.html'>read_mat()</a></code>, see details)</p></td>
@@ -137,47 +127,28 @@ Mainly used to compute the matrix for input to <code><a href='bend.html'>bend()<
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code><a href='https://rdrr.io/r/base/data.frame.html'>data.frame()</a></code>:</p><ul>
+    <p>The input <code><a href='https://rdrr.io/r/base/data.frame.html'>data.frame()</a></code> with modified (or enriched with):</p><ul>
 <li><p>x: x coordinate</p></li>
 <li><p>y: y coordinate</p></li>
 <li><p>z: z coordinate</p></li>
-<li><p>type: section type. 1: triangle (bottom-oriented); 2 : rectangle; 3 : triangle (top-oriented);
-4 : ellipsis; 5 : circle.</p></li>
-<li><p>width (m): section width</p></li>
-<li><p>height (m): section height</p></li>
-<li><p>mass (kg): mass of the section at the point</p></li>
-<li><p>mass_right (kg): mass carried by the object, on the right side</p></li>
-<li><p>mass_left (kg): mass carried by the object, on the left side</p></li>
-<li><p>elastic_modulus (MPa): elasticity modulus (bending)</p></li>
-<li><p>shear_modulus (MPa): shear modulus (torsion)</p></li>
-<li><p>inclination (degree): insertion angle of the first section (only first value is used)</p></li>
-<li><p>distance_application (m): application distances for the left and right weights</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>df should be a formatted <code><a href='https://rdrr.io/r/base/data.frame.html'>data.frame()</a></code>, with each row being a point and each columns being:</p><ul>
 <li><p>distance (m): distance between the previous point and this point (first value should be positive)</p></li>
-<li><p>type: section type. 1: triangle (bottom-oriented); 2 : rectangle; 3 : triangle (top-oriented);
-4 : ellipsis; 5 : circle.</p></li>
-<li><p>width (m): section width</p></li>
-<li><p>height (m): section height</p></li>
 <li><p>inclination (degree): insertion angle of the first point (only first value is used)</p></li>
-<li><p>torsion (degree): torsion angle</p></li>
-<li><p>x: x coordinate (optional, only for plotting)</p></li>
-<li><p>y: y coordinate (optional, only for plotting)</p></li>
-<li><p>z: z coordinate (optional, only for plotting)</p></li>
-<li><p>mass (kg): mass of the section at the point</p></li>
-<li><p>mass_right (kg): mass carried by the object, on the right side</p></li>
-<li><p>mass_left (kg): mass carried by the object, on the left side</p></li>
 </ul>
 
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+
+    <p>Mainly used to compute the matrix for input to <code><a href='bend.html'>bend()</a></code> from experimental points.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='kw'>filepath</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/6_EW01.22_17_kanan.txt"</span>, package = <span class='st'>"biomech"</span>)
 <span class='kw'>df</span> <span class='op'>=</span> <span class='fu'><a href='read_mat.html'>read_mat</a></span>(<span class='kw'>filepath</span>)
-<span class='fu'>unbend</span>(MOE = <span class='fl'>2000</span>, CIS = <span class='fl'>400</span>, df = <span class='kw'>df</span>)
+<span class='fu'>unbend</span>(df = <span class='kw'>df</span>)
 }
 </div></pre>
   </div>

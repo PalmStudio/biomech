@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Deform — bend • biomech</title>
+<title>Weight distance of application — distance_weight_sine • biomech</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Deform — bend" />
-<meta property="og:description" content="Compute the deformation by applying both bending and torsion" />
+<meta property="og:title" content="Weight distance of application — distance_weight_sine" />
+<meta property="og:description" content="Computes the distance of application of the right/left weights using a sine
+evolution along the beam." />
 
 
 
@@ -103,101 +104,39 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Deform</h1>
+    <h1>Weight distance of application</h1>
     
-    <div class="hidden name"><code>bend.Rd</code></div>
+    <div class="hidden name"><code>distance_weight_sine.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Compute the deformation by applying both bending and torsion</p>
+    <p>Computes the distance of application of the right/left weights using a sine
+evolution along the beam.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>bend</span>(
-  <span class='kw'>data</span>,
-  <span class='kw'>elastic_modulus</span>,
-  <span class='kw'>shear_modulus</span>,
-  step = <span class='fl'>0.02</span>,
-  points = <span class='fl'>100</span>,
-  iterations = <span class='fl'>15</span>,
-  verbose = <span class='fl'>TRUE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>distance_weight_sine</span>(<span class='kw'>x</span>, dF = <span class='fl'>0.1</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>Point data.frame (see details).</p></td>
+      <th>x</th>
+      <td><p>X position of the segments</p></td>
     </tr>
     <tr>
-      <th>elastic_modulus</th>
-      <td><p>Elasticity modulus (bending, MPa)</p></td>
-    </tr>
-    <tr>
-      <th>shear_modulus</th>
-      <td><p>shear modulus (torsion, MPa)</p></td>
-    </tr>
-    <tr>
-      <th>step</th>
-      <td><p>Length of the segments that discretize the object (m).</p></td>
-    </tr>
-    <tr>
-      <th>points</th>
-      <td><p>Number of points used in the grid discretizing the section.</p></td>
-    </tr>
-    <tr>
-      <th>iterations</th>
-      <td><p>Number of iterations to compute the torsion and bending</p></td>
-    </tr>
-    <tr>
-      <th>verbose</th>
-      <td><p>Boolean. Return information during procress?</p></td>
+      <th>dF</th>
+      <td><p>Amplitude (m)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code><a href='https://rdrr.io/r/base/data.frame.html'>data.frame()</a></code>:</p><ul>
-<li><p>x (m): X coordinate</p></li>
-<li><p>y (m): Y coordinate</p></li>
-<li><p>z (m): Z coordinate</p></li>
-<li><p>length (m): length of the section</p></li>
-<li><p>angle_xy (degree): angle of the segment with the XY plane</p></li>
-<li><p>angle_xz (degree): angle of the segment with the XZ plane</p></li>
-<li><p>torsion (degree): rotation angle of the segment</p></li>
-</ul>
-
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The data argument is a <code><a href='https://rdrr.io/r/base/data.frame.html'>data.frame()</a></code> with each row being a point and each column being:</p><ul>
-<li><p>x: x coordinate of the segment</p></li>
-<li><p>y: y coordinate of the segment</p></li>
-<li><p>z: z coordinate of the segment</p></li>
-<li><p>type: section type of the segment. 1: triangle (bottom-oriented); 2 : rectangle; 3 : triangle (top-oriented);
-4 : ellipsis; 5 : circle.</p></li>
-<li><p>width (m): segment section width</p></li>
-<li><p>height (m): segment section height</p></li>
-<li><p>mass (kg): mass of the segment</p></li>
-<li><p>mass_right (kg): mass carried by the segment, on the right side</p></li>
-<li><p>mass_left (kg): mass carried by the segment, on the left side</p></li>
-<li><p>torsion (degree): initial torsion angle of the segment</p></li>
-<li><p>distance_application (m): application distances for the left and right weights (see e.g. <code><a href='distance_weight_sine.html'>distance_weight_sine()</a></code>)</p></li>
-</ul>
-
+    <p>The distance at which the left/right weights are applied from the beam axis. Both
+sides are considered equal.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>filepath</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/6_EW01.22_17_kanan.txt"</span>, package = <span class='st'>"biomech"</span>)
-<span class='kw'>df</span> <span class='op'>=</span> <span class='fu'><a href='read_mat.html'>read_mat</a></span>(<span class='kw'>filepath</span>)
-<span class='co'># Un-bending the field measurements:</span>
-<span class='kw'>df</span> <span class='op'>=</span> <span class='fu'><a href='unbend.html'>unbend</a></span>(<span class='kw'>df</span>)
-
-<span class='co'># Adding the distance of application of the left and right weight:</span>
-<span class='kw'>df</span><span class='op'>$</span><span class='kw'>distance_application</span> <span class='op'>=</span> <span class='fu'><a href='distance_weight_sine.html'>distance_weight_sine</a></span>(<span class='kw'>df</span><span class='op'>$</span><span class='kw'>x</span>)
-
-<span class='co'># (Re-)computing the deformation:</span>
-<span class='kw'>df_bend</span> <span class='op'>=</span> <span class='fu'>bend</span>(<span class='kw'>df</span>, elastic_modulus = <span class='fl'>2000</span>, shear_modulus = <span class='fl'>400</span>, step = <span class='fl'>0.02</span>, points = <span class='fl'>100</span>,
-               iterations = <span class='fl'>15</span>, verbose = <span class='fl'>TRUE</span>)
-</div><div class='output co'>#&gt;  Final torsion angle at the tip (degree) =  12.52822</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>distance_weight_sine</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>))
+</div><div class='output co'>#&gt; [1] 8.660254e-02 8.660254e-02 1.224647e-17</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

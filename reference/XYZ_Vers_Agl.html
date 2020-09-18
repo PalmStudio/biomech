@@ -142,8 +142,7 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>filepath</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/6_EW01.22_17_kanan.txt"</span>, package = <span class='st'>"biomech"</span>)
-<span class='kw'>df</span> <span class='op'>=</span> <span class='fu'><a href='read_mat.html'>read_mat</a></span>(<span class='kw'>filepath</span>)
-<span class='kw'>df</span> <span class='op'>=</span> <span class='fu'><a href='unbend.html'>unbend</a></span>(<span class='fl'>2000</span>,<span class='fl'>400</span>,<span class='kw'>df</span>)
+<span class='kw'>df</span> <span class='op'>=</span> <span class='fu'><a href='unbend.html'>unbend</a></span>(<span class='fu'><a href='read_mat.html'>read_mat</a></span>(<span class='kw'>filepath</span>))
 <span class='fu'>XYZ_Vers_Agl</span>(<span class='kw'>df</span><span class='op'>$</span><span class='kw'>x</span>,<span class='kw'>df</span><span class='op'>$</span><span class='kw'>y</span>,<span class='kw'>df</span><span class='op'>$</span><span class='kw'>z</span>)
 </div><div class='output co'>#&gt; $dist_P2P1
 #&gt; [1] 0.001 1.340 1.340 0.770 0.770

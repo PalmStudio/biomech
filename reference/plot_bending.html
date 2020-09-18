@@ -138,11 +138,20 @@
     <p>A plotly object, see <code><a href='https://rdrr.io/pkg/plotly/man/plot_ly.html'>plotly::plot_ly()</a></code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>filepath</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/6_EW01.22_17_kanan.txt"</span>, package = <span class='st'>"biomech"</span>)
+    <pre class="examples"><div class='input'><span class='kw'>file_path</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/6_EW01.22_17_kanan.txt"</span>, package = <span class='st'>"biomech"</span>)
+<span class='kw'>field_data</span> <span class='op'>=</span> <span class='fu'><a href='read_mat.html'>read_mat</a></span>(<span class='kw'>file_path</span>)
 <span class='co'># Un-bending the field measurements:</span>
-<span class='kw'>df</span> <span class='op'>=</span> <span class='fu'><a href='unbend.html'>unbend</a></span>(<span class='fl'>2000</span>,<span class='fl'>400</span>, <span class='fu'><a href='read_mat.html'>read_mat</a></span>(<span class='kw'>filepath</span>))
-<span class='kw'>df_bend</span> <span class='op'>=</span> <span class='fu'><a href='bend.html'>bend</a></span>(<span class='kw'>df</span>, step = <span class='fl'>0.02</span>, points = <span class='fl'>100</span>, iterations = <span class='fl'>15</span>, verbose = <span class='fl'>TRUE</span>)
-</div><div class='output co'>#&gt;  Final torsion angle at the tip (degree) =  12.52822</div><div class='input'><span class='fu'>plot_bending</span>(<span class='kw'>df_bend</span>,<span class='kw'>df</span>)
+<span class='kw'>df_unbent</span> <span class='op'>=</span> <span class='fu'><a href='unbend.html'>unbend</a></span>(<span class='kw'>field_data</span>)
+
+<span class='co'># Adding the distance of application of the left and right weight:</span>
+<span class='kw'>df_unbent</span><span class='op'>$</span><span class='kw'>distance_application</span> <span class='op'>=</span> <span class='fu'><a href='distance_weight_sine.html'>distance_weight_sine</a></span>(<span class='kw'>df_unbent</span><span class='op'>$</span><span class='kw'>x</span>)
+
+<span class='co'># (Re-)computing the deformation:</span>
+<span class='kw'>df_bent</span> <span class='op'>=</span> <span class='fu'><a href='bend.html'>bend</a></span>(<span class='kw'>df_unbent</span>, elastic_modulus = <span class='fl'>2000</span>, shear_modulus = <span class='fl'>400</span>, step = <span class='fl'>0.02</span>,
+               points = <span class='fl'>100</span>, iterations = <span class='fl'>15</span>, verbose = <span class='fl'>TRUE</span>)
+</div><div class='output co'>#&gt;  Final torsion angle at the tip (degree) =  12.52822</div><div class='input'>
+<span class='co'># And finally, plotting:</span>
+<span class='fu'>plot_bending</span>(<span class='kw'>df_bent</span>,<span class='kw'>df_unbent</span>)
 </div><div class='img'><img src='plot_bending-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
