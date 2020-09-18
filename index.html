@@ -90,16 +90,16 @@
 <span class="kw">df_unbent</span><span class="op">$</span><span class="kw">distance_application</span> <span class="op">=</span> <span class="fu"><a href="reference/distance_weight_sine.html">distance_weight_sine</a></span>(<span class="kw">df_unbent</span><span class="op">$</span><span class="kw">x</span>)
 
 <span class="co"># (Re-)computing the deformation:</span>
-<span class="kw">df_bent</span> <span class="op">=</span> <span class="fu"><a href="reference/bend.html">bend</a></span>(<span class="kw">df_unbent</span>, elastic_modulus = <span class="fl">2000</span>, shear_modulus = <span class="fl">400</span>, step = <span class="fl">0.02</span>, points = <span class="fl">100</span>, iterations = <span class="fl">15</span>, verbose = <span class="fl">TRUE</span>)
-<span class="co">#&gt;  Final torsion angle at the tip (degree) =  12.52822</span>
+<span class="kw">df_bent</span> <span class="op">=</span> <span class="fu"><a href="reference/bend.html">bend</a></span>(<span class="kw">df_unbent</span>, elastic_modulus = <span class="fl">1200</span>, shear_modulus = <span class="fl">100</span>, step = <span class="fl">0.02</span>, points = <span class="fl">100</span>, iterations = <span class="fl">15</span>, verbose = <span class="fl">TRUE</span>)
+<span class="co">#&gt;  Final torsion angle at the tip (degree) =  37.91962</span>
 
 <span class="kw">df_bent</span>
-<span class="co">#&gt;          x            y         z    length  angle_xy    angle_xz   torsion</span>
-<span class="co">#&gt; 1 0.000000 0.000000e+00 0.0000000 0.0000000  0.000000 0.000000000  4.000000</span>
-<span class="co">#&gt; 2 1.005821 2.560607e-05 0.8804207 1.3367185 41.196484 0.001458629  4.032577</span>
-<span class="co">#&gt; 3 2.189133 1.221958e-03 1.5040225 1.3375757 27.789072 0.057927116  4.680782</span>
-<span class="co">#&gt; 4 2.938415 1.010048e-02 1.7168802 0.7789798 15.857866 0.678887946  7.234918</span>
-<span class="co">#&gt; 5 3.694703 5.296550e-02 1.6982406 0.7577320 -1.409568 3.243945798 12.528219</span>
+<span class="co">#&gt;          x            y         z    length   angle_xy     angle_xz   torsion</span>
+<span class="co">#&gt; 1 0.000000 0.0000000000 0.0000000 0.0000000   0.000000  0.000000000  4.000000</span>
+<span class="co">#&gt; 2 1.085347 0.0001879442 0.7668137 1.3289023  35.241771  0.009921628  4.130507</span>
+<span class="co">#&gt; 3 2.390765 0.0086790523 1.0299259 1.3316966  11.395287  0.372675923  6.727513</span>
+<span class="co">#&gt; 4 3.154218 0.0675902388 0.9025891 0.7762381  -9.441675  4.412435490 16.918753</span>
+<span class="co">#&gt; 5 3.712503 0.2987318001 0.4561007 0.7513063 -36.461526 22.490548518 37.919620</span>
 </pre></div>
 <p>You can plot the results using:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
@@ -111,7 +111,7 @@
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="fu"><a href="reference/plot_bending.html">plot_bending_3d</a></span>(<span class="kw">df_bent</span>,<span class="kw">df_unbent</span>)
 </pre></div>
-<p><img src="www/bent.png" width="100%"></p>
+<p><img src="https://raw.githubusercontent.com/PalmStudio/biomech/master/www/bent.png"></p>
 </div>
 </div>
   </div>

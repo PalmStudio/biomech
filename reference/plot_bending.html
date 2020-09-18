@@ -112,30 +112,22 @@
     <p>Plot bent</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plot_bending</span>(<span class='kw'>bent</span>, unbent = <span class='kw'>NULL</span>, <span class='kw'>...</span>)
+    <pre class="usage"><span class='fu'>plot_bending</span>(<span class='kw'>...</span>)
 
-<span class='fu'>plot_bending_3d</span>(<span class='kw'>bent</span>, unbent = <span class='kw'>NULL</span>, <span class='kw'>...</span>)</pre>
+<span class='fu'>plot_bending_3d</span>(<span class='kw'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>bent</th>
-      <td><p>Bent data.frame</p></td>
-    </tr>
-    <tr>
-      <th>unbent</th>
-      <td><p>Initial state data.frame (as from <code><a href='unbend.html'>unbend()</a></code>)</p></td>
-    </tr>
-    <tr>
       <th>...</th>
-      <td><p>Further parameters.</p></td>
+      <td><p>A list of X, Y, Z data.frames for each beam of beam state</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A plotly object, see <code><a href='https://rdrr.io/pkg/plotly/man/plot_ly.html'>plotly::plot_ly()</a></code></p>
+    <p>A ggplot or a plotly object (see <code><a href='https://rdrr.io/pkg/plotly/man/plot_ly.html'>plotly::plot_ly()</a></code>)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>file_path</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/6_EW01.22_17_kanan.txt"</span>, package = <span class='st'>"biomech"</span>)
@@ -151,8 +143,11 @@
                points = <span class='fl'>100</span>, iterations = <span class='fl'>15</span>, verbose = <span class='fl'>TRUE</span>)
 </div><div class='output co'>#&gt;  Final torsion angle at the tip (degree) =  12.52822</div><div class='input'>
 <span class='co'># And finally, plotting:</span>
-<span class='fu'>plot_bending</span>(<span class='kw'>df_bent</span>,<span class='kw'>df_unbent</span>)
-</div><div class='img'><img src='plot_bending-1.png' alt='' width='700' height='433' /></div></pre>
+<span class='fu'>plot_bending</span>(bent = <span class='kw'>df_bent</span>, <span class='st'>"un-bent"</span> = <span class='kw'>df_unbent</span>)
+</div><div class='img'><img src='plot_bending-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># And in 3d:</span>
+<span class='co'># plot_bending_3d(bent = df_bent, "un-bent" = df_unbent)</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
