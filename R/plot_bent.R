@@ -103,7 +103,9 @@ plot_bending_3d = function(...){
   plot_range_max = max(plot_range)
 
   plotly::plot_ly(df, x= ~x, y = ~y, z= ~z, type = 'scatter3d',
-                  mode = 'lines', color = ~name)%>%
+                  mode = 'lines+markers', color = ~name,
+                  line = list(width = 4), size = 2)%>%
+    # plotly::add_trace(mode = 'markers', size = 2)%>%
     plotly::layout(scene = list(
       xaxis = list(range = plot_range),
       yaxis = list(range = c(-plot_range_max,plot_range_max)),

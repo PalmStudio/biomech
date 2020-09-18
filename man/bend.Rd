@@ -19,7 +19,7 @@ bend(
 
 \item{elastic_modulus}{Elasticity modulus (bending, MPa)}
 
-\item{shear_modulus}{shear modulus (torsion, MPa)}
+\item{shear_modulus}{Shear modulus (torsion, MPa)}
 
 \item{step}{Length of the segments that discretize the object (m).}
 

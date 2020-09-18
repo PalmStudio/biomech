@@ -4,7 +4,7 @@
 #'
 #' @param data Point data.frame (see details).
 #' @param elastic_modulus Elasticity modulus (bending, MPa)
-#' @param shear_modulus shear modulus (torsion, MPa)
+#' @param shear_modulus Shear modulus (torsion, MPa)
 #' @param step Length of the segments that discretize the object (m).
 #' @param points Number of points used in the grid discretizing the section.
 #' @param iterations Number of iterations to compute the torsion and bending
