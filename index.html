@@ -103,13 +103,13 @@
 </pre></div>
 <p>You can plot the results using:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="reference/plot_bending.html">plot_bending</a></span>(bent = <span class="kw">df_bent</span>, unbent = <span class="kw">df_unbent</span>)
+<span class="fu"><a href="reference/plot_bending.html">plot_bending</a></span>(Observed = <span class="kw">field_data</span>, <span class="st">"Un-Bent obs."</span> = <span class="kw">df_unbent</span>, Modeled = <span class="kw">df_bent</span>)
 </pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-2-1.png" width="100%"></p>
 <p>Note that the <code>unbent</code> argument is optional but can be very usefull to compare with the initial conditions.</p>
 <p>You can even make 3d plots using <code>plot_bent_3d()</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="reference/plot_bending.html">plot_bending_3d</a></span>(<span class="kw">df_bent</span>,<span class="kw">df_unbent</span>)
+<span class="fu"><a href="reference/plot_bending.html">plot_bending_3d</a></span>(Observed = <span class="kw">field_data</span>, <span class="st">"Un-Bent obs."</span> = <span class="kw">df_unbent</span>, Modeled = <span class="kw">df_bent</span>)
 </pre></div>
 <p><img src="https://raw.githubusercontent.com/PalmStudio/biomech/master/www/bent.png"></p>
 </div>
