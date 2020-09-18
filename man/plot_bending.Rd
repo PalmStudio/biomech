@@ -5,19 +5,15 @@
 \alias{plot_bending_3d}
 \title{Plot bent}
 \usage{
-plot_bending(bent, unbent = NULL, ...)
+plot_bending(...)
 
-plot_bending_3d(bent, unbent = NULL, ...)
+plot_bending_3d(...)
 }
 \arguments{
-\item{bent}{Bent data.frame}
-
-\item{unbent}{Initial state data.frame (as from \code{\link[=unbend]{unbend()}})}
-
-\item{...}{Further parameters.}
+\item{...}{A list of X, Y, Z data.frames for each beam of beam state}
 }
 \value{
-A plotly object, see \code{\link[plotly:plot_ly]{plotly::plot_ly()}}
+A ggplot or a plotly object (see \code{\link[plotly:plot_ly]{plotly::plot_ly()}})
 }
 \description{
 Plot bent
@@ -36,5 +32,8 @@ df_bent = bend(df_unbent, elastic_modulus = 2000, shear_modulus = 400, step = 0.
                points = 100, iterations = 15, verbose = TRUE)
 
 # And finally, plotting:
-plot_bending(df_bent,df_unbent)
+plot_bending(bent = df_bent, "un-bent" = df_unbent)
+
+# And in 3d:
+# plot_bending_3d(bent = df_bent, "un-bent" = df_unbent)
 }

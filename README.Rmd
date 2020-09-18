@@ -1,5 +1,6 @@
 ---
 output: github_document
+always_allow_html: true
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -46,7 +47,7 @@ df_unbent = unbend(field_data)
 df_unbent$distance_application = distance_weight_sine(df_unbent$x)
 
 # (Re-)computing the deformation:
-df_bent = bend(df_unbent, elastic_modulus = 2000, shear_modulus = 400, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
+df_bent = bend(df_unbent, elastic_modulus = 1200, shear_modulus = 100, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
 
 df_bent
 ```
@@ -66,3 +67,4 @@ plot_bending_3d(df_bent,df_unbent)
 ```
 
 ![](https://raw.githubusercontent.com/PalmStudio/biomech/master/www/bent.png)
+

@@ -1,10 +1,8 @@
 #' Plot bent
 #'
-#' @param bent   Bent data.frame
-#' @param unbent Initial state data.frame (as from [unbend()])
-#' @param ...    Further parameters.
+#' @param ... A list of X, Y, Z data.frames for each beam of beam state
 #'
-#' @return A plotly object, see [plotly::plot_ly()]
+#' @return A ggplot or a plotly object (see [plotly::plot_ly()])
 #' @export
 #'
 #' @importFrom rlang .data
@@ -23,17 +21,39 @@
 #'                points = 100, iterations = 15, verbose = TRUE)
 #'
 #' # And finally, plotting:
-#' plot_bending(df_bent,df_unbent)
-plot_bending = function(bent, unbent = NULL, ...){
-  plot_range = range(bent$x,bent$y,bent$z,unbent$x,unbent$y,unbent$z)
-  plot_range_max = max(plot_range)
+#' plot_bending(bent = df_bent, "un-bent" = df_unbent)
+#'
+#' # And in 3d:
+#' # plot_bending_3d(bent = df_bent, "un-bent" = df_unbent)
+plot_bending = function(...){
+  dot_args = list(...)
 
-  df = rbind(data.frame(x = bent$x, y = bent$y, z = bent$z, type = "bent"),
-             data.frame(x = unbent$x, y = unbent$y, z = unbent$z, type = "unbent"))
+  if(is.null(names(dot_args))){
+    names(dot_args) = paste("Beam",seq_along(dot_args))
+  }
+
+  if(any(names(dot_args) == "")){
+    names(dot_args)[names(dot_args) == ""] =
+      paste("Beam",which(names(dot_args) == ""))
+  }
+
+
+  df =
+    mapply(function(x,y){
+      x = data.frame(x = x$x, y = x$y, z = x$z)
+      x$name = y
+      x
+    },
+    dot_args, names(dot_args), SIMPLIFY = FALSE)
+
+  df = data.table::rbindlist(df)
+
+  plot_range = range(df$x,df$y,df$z)
+  plot_range_max = max(plot_range)
 
   side_view =
     ggplot2::ggplot(data = df, ggplot2::aes(x = .data$x, y = .data$z,
-                                            color = .data$type))+
+                                            color = .data$name))+
     ggplot2::geom_line()+
     ggplot2::coord_cartesian(xlim = plot_range,
                              ylim = plot_range)+
@@ -41,7 +61,7 @@ plot_bending = function(bent, unbent = NULL, ...){
 
   top_view =
     ggplot2::ggplot(data = df, ggplot2::aes(x = .data$x, y = .data$y,
-                                            color = .data$type))+
+                                            color = .data$name))+
     ggplot2::geom_line()+
     ggplot2::coord_cartesian(xlim = plot_range,
                              ylim = c(-plot_range_max,
@@ -54,21 +74,34 @@ plot_bending = function(bent, unbent = NULL, ...){
 
 #' @rdname plot_bending
 #' @export
-plot_bending_3d = function(bent, unbent = NULL, ...){
-  . = NULL
-  plot_range = range(bent$x,bent$y,bent$z,unbent$x,unbent$y,unbent$z)
+plot_bending_3d = function(...){
+  dot_args = list(...)
+
+  if(is.null(names(dot_args))){
+    names(dot_args) = paste("Beam",seq_along(dot_args))
+  }
+
+  if(any(names(dot_args) == "")){
+    names(dot_args)[names(dot_args) == ""] =
+      paste("Beam",which(names(dot_args) == ""))
+  }
+
+
+  df =
+    mapply(function(x,y){
+      x = data.frame(x = x$x, y = x$y, z = x$z)
+      x$name = y
+      x
+    },
+    dot_args, names(dot_args), SIMPLIFY = FALSE)
+
+  df = data.table::rbindlist(df)
+
+  plot_range = range(df$x,df$y,df$z)
   plot_range_max = max(plot_range)
 
-  plotly::plot_ly(bent, x= ~x, y = ~y, z= ~z, type = 'scatter3d',
-                  mode = 'lines', name = "Bent")%>%
-    {
-      if(!is.null(unbent)){
-        plotly::add_trace(p = ., data = unbent, x = ~x, y = ~y, z = ~z,
-                          name = "Un-bent")
-      }else{
-        .
-      }
-    }%>%
+  plotly::plot_ly(df, x= ~x, y = ~y, z= ~z, type = 'scatter3d',
+                  mode = 'lines', color = ~name)%>%
     plotly::layout(scene = list(
       xaxis = list(range = plot_range),
       yaxis = list(range = c(-plot_range_max,plot_range_max)),
