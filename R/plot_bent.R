@@ -10,11 +10,20 @@
 #' @importFrom rlang .data
 #'
 #' @examples
-#' filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
+#' file_path = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
+#' field_data = read_mat(file_path)
 #' # Un-bending the field measurements:
-#' df = unbend(2000,400, read_mat(filepath))
-#' df_bend = bend(df, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
-#' plot_bending(df_bend,df)
+#' df_unbent = unbend(field_data)
+#'
+#' # Adding the distance of application of the left and right weight:
+#' df_unbent$distance_application = distance_weight_sine(df_unbent$x)
+#'
+#' # (Re-)computing the deformation:
+#' df_bent = bend(df_unbent, elastic_modulus = 2000, shear_modulus = 400, step = 0.02,
+#'                points = 100, iterations = 15, verbose = TRUE)
+#'
+#' # And finally, plotting:
+#' plot_bending(df_bent,df_unbent)
 plot_bending = function(bent, unbent = NULL, ...){
   plot_range = range(bent$x,bent$y,bent$z,unbent$x,unbent$y,unbent$z)
   plot_range_max = max(plot_range)
@@ -55,7 +64,7 @@ plot_bending_3d = function(bent, unbent = NULL, ...){
     {
       if(!is.null(unbent)){
         plotly::add_trace(p = ., data = unbent, x = ~x, y = ~y, z = ~z,
-                          name = "Initial state")
+                          name = "Un-bent")
       }else{
         .
       }

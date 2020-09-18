@@ -37,19 +37,24 @@ Here is an example usage:
 
 ```{r example}
 library(biomech)
-filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
+file_path = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
+field_data = read_mat(file_path)
 # Un-bending the field measurements:
-df = unbend(2000,400, read_mat(filepath))
-# (Re-)computing the deformation:
-df_bend = bend(df, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
+df_unbent = unbend(field_data)
 
-df_bend
+# Adding the distance of application of the left and right weight:
+df_unbent$distance_application = distance_weight_sine(df_unbent$x)
+
+# (Re-)computing the deformation:
+df_bent = bend(df_unbent, elastic_modulus = 2000, shear_modulus = 400, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
+
+df_bent
 ```
 
 You can plot the results using:
 
 ```{r}
-plot_bending(bent = df_bend, unbent = df)
+plot_bending(bent = df_bent, unbent = df_unbent)
 ```
 
 Note that the `unbent` argument is optional but can be very usefull to compare with the initial conditions.
@@ -57,7 +62,7 @@ Note that the `unbent` argument is optional but can be very usefull to compare w
 You can even make 3d plots using `plot_bent_3d()`:
 
 ```{r eval=FALSE}
-plot_bending_3d(df_bend,df)
+plot_bending_3d(df_bent,df_unbent)
 ```
 
 ```{r echo=FALSE}

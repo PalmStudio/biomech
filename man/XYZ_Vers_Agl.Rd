@@ -26,8 +26,7 @@ Title
 }
 \examples{
 filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
-df = read_mat(filepath)
-df = unbend(2000,400,df)
+df = unbend(read_mat(filepath))
 XYZ_Vers_Agl(df$x,df$y,df$z)
 
 }

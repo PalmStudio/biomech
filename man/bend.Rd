@@ -4,10 +4,22 @@
 \alias{bend}
 \title{Deform}
 \usage{
-bend(data, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
+bend(
+  data,
+  elastic_modulus,
+  shear_modulus,
+  step = 0.02,
+  points = 100,
+  iterations = 15,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{data}{Point data.frame (see details).}
+
+\item{elastic_modulus}{Elasticity modulus (bending, MPa)}
+
+\item{shear_modulus}{shear modulus (torsion, MPa)}
 
 \item{step}{Length of the segments that discretize the object (m).}
 
@@ -35,27 +47,30 @@ Compute the deformation by applying both bending and torsion
 \details{
 The data argument is a \code{\link[=data.frame]{data.frame()}} with each row being a point and each column being:
 \itemize{
-\item x: x coordinate
-\item y: y coordinate
-\item z: z coordinate
-\item type: section type. 1: triangle (bottom-oriented); 2 : rectangle; 3 : triangle (top-oriented);
+\item x: x coordinate of the segment
+\item y: y coordinate of the segment
+\item z: z coordinate of the segment
+\item type: section type of the segment. 1: triangle (bottom-oriented); 2 : rectangle; 3 : triangle (top-oriented);
 4 : ellipsis; 5 : circle.
-\item width (m): section width
-\item height (m): section height
-\item mass (kg): mass of the section at the point
-\item mass_right (kg): mass carried by the object, on the right side
-\item mass_left (kg): mass carried by the object, on the left side
-\item elastic_modulus (MPa): elasticity modulus (bending)
-\item shear_modulus (MPa): shear modulus (torsion)
-\item inclination (degree): insertion angle of the first section (only first value is used)
-\item distance_application (m): application distances for the left and right weights
+\item width (m): segment section width
+\item height (m): segment section height
+\item mass (kg): mass of the segment
+\item mass_right (kg): mass carried by the segment, on the right side
+\item mass_left (kg): mass carried by the segment, on the left side
+\item torsion (degree): initial torsion angle of the segment
+\item distance_application (m): application distances for the left and right weights (see e.g. \code{\link[=distance_weight_sine]{distance_weight_sine()}})
 }
 }
 \examples{
 filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
+df = read_mat(filepath)
 # Un-bending the field measurements:
-df = unbend(2000,400, read_mat(filepath))
+df = unbend(df)
+
+# Adding the distance of application of the left and right weight:
+df$distance_application = distance_weight_sine(df$x)
 
 # (Re-)computing the deformation:
-df_bend = bend(df, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
+df_bend = bend(df, elastic_modulus = 2000, shear_modulus = 400, step = 0.02, points = 100,
+               iterations = 15, verbose = TRUE)
 }

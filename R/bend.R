@@ -3,26 +3,26 @@
 #' Compute the deformation by applying both bending and torsion
 #'
 #' @param data Point data.frame (see details).
+#' @param elastic_modulus Elasticity modulus (bending, MPa)
+#' @param shear_modulus shear modulus (torsion, MPa)
 #' @param step Length of the segments that discretize the object (m).
 #' @param points Number of points used in the grid discretizing the section.
 #' @param iterations Number of iterations to compute the torsion and bending
 #' @param verbose Boolean. Return information during procress?
 #'
 #' @details The data argument is a [data.frame()] with each row being a point and each column being:
-#' - x: x coordinate
-#' - y: y coordinate
-#' - z: z coordinate
-#' - type: section type. 1: triangle (bottom-oriented); 2 : rectangle; 3 : triangle (top-oriented);
+#' - x: x coordinate of the segment
+#' - y: y coordinate of the segment
+#' - z: z coordinate of the segment
+#' - type: section type of the segment. 1: triangle (bottom-oriented); 2 : rectangle; 3 : triangle (top-oriented);
 #' 4 : ellipsis; 5 : circle.
-#' - width (m): section width
-#' - height (m): section height
-#' - mass (kg): mass of the section at the point
-#' - mass_right (kg): mass carried by the object, on the right side
-#' - mass_left (kg): mass carried by the object, on the left side
-#' - elastic_modulus (MPa): elasticity modulus (bending)
-#' - shear_modulus (MPa): shear modulus (torsion)
-#' - inclination (degree): insertion angle of the first section (only first value is used)
-#' - distance_application (m): application distances for the left and right weights
+#' - width (m): segment section width
+#' - height (m): segment section height
+#' - mass (kg): mass of the segment
+#' - mass_right (kg): mass carried by the segment, on the right side
+#' - mass_left (kg): mass carried by the segment, on the left side
+#' - torsion (degree): initial torsion angle of the segment
+#' - distance_application (m): application distances for the left and right weights (see e.g. [distance_weight_sine()])
 #'
 #' @return A [data.frame()]:
 #' - x (m): X coordinate
@@ -37,12 +37,17 @@
 #'
 #' @examples
 #' filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
+#' df = read_mat(filepath)
 #' # Un-bending the field measurements:
-#' df = unbend(2000,400, read_mat(filepath))
+#' df = unbend(df)
+#'
+#' # Adding the distance of application of the left and right weight:
+#' df$distance_application = distance_weight_sine(df$x)
 #'
 #' # (Re-)computing the deformation:
-#' df_bend = bend(df, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
-bend = function(data, step = 0.02, points = 100,
+#' df_bend = bend(df, elastic_modulus = 2000, shear_modulus = 400, step = 0.02, points = 100,
+#'                iterations = 15, verbose = TRUE)
+bend = function(data,elastic_modulus,shear_modulus, step = 0.02, points = 100,
                 iterations = 15, verbose = TRUE){
 
   vecRotFlex = matrix(0, ncol = 1, nrow = 3)
@@ -91,10 +96,26 @@ bend = function(data, step = 0.02, points = 100,
   step = distTotale / (Nlin - 1)
   vecDist = (0 : (Nlin - 1)) * step
 
-  vMOE = data$elastic_modulus
+  if(length(elastic_modulus) != nrow(data)){
+    if(length(elastic_modulus) == 1){
+      elastic_modulus = rep(elastic_modulus, nrow(data))
+    }else{
+      stop("elastic_modulus argument should be of length 1 or equal to `nrow(data)`")
+    }
+  }
+
+  if(length(shear_modulus) != nrow(data)){
+    if(length(shear_modulus) == 1){
+      shear_modulus = rep(shear_modulus, nrow(data))
+    }else{
+      stop("shear_modulus argument should be of length 1 or equal to `nrow(data)`")
+    }
+  }
+
+  vMOE = elastic_modulus
   vecMOE = stats::approx(c(0,distLineique), c(vMOE[1], vMOE), vecDist, method = 'linear')$y
 
-  vG = data$shear_modulus
+  vG = shear_modulus
   vecG = stats::approx(c(0,distLineique), c(vG[1], vG), vecDist, method = 'linear')$y
 
   vAngle_Tor = data$torsion * pi / 180 # (radian)
