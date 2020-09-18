@@ -67,4 +67,4 @@ You can even make 3d plots using `plot_bent_3d()`:
 plot_bending_3d(df_bent,df_unbent)
 ```
 
-<img src="www/bent.png" width="100%" />
+![](https://raw.githubusercontent.com/PalmStudio/biomech/master/www/bent.png)
