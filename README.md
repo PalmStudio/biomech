@@ -11,7 +11,7 @@ status](https://github.com/PalmStudio/biomech/workflows/R-CMD-check/badge.svg)](
 
 `biomech` helps to compute bending and torsion of beams following the
 Euler-Bernoulli beam theory. It is specifically designed to be applied
-on tree branches (or e.g. palm leaves), but can be applyied to any other
+on tree branches (or e.g. palm leaves), but can be applied to any other
 beam-shaped structure.
 
 ## Installation
