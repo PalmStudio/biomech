@@ -53,7 +53,7 @@ df_bent
 You can plot the results using:
 
 ``` r
-plot_bending(bent = df_bent, unbent = df_unbent)
+plot_bending(Observed = field_data, "Un-Bent obs." = df_unbent, Modeled = df_bent)
 ```
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
@@ -64,7 +64,7 @@ compare with the initial conditions.
 You can even make 3d plots using `plot_bent_3d()`:
 
 ``` r
-plot_bending_3d(df_bent,df_unbent)
+plot_bending_3d(Observed = field_data, "Un-Bent obs." = df_unbent, Modeled = df_bent)
 ```
 
 ![](https://raw.githubusercontent.com/PalmStudio/biomech/master/www/bent.png)
