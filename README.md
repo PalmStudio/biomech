@@ -183,7 +183,7 @@ plot_bending(Observed = field_data, "Un-Bent obs." = df_unbent,
 
 ## 3\. References
 
-<div id="refs" class="references hanging-indent">
+<div id="refs" class="references">
 
 <div id="ref-perezAnalyzingModellingGenetic2017">
 
