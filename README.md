@@ -29,14 +29,19 @@ Here is an example usage:
 
 ``` r
 library(biomech)
-filepath = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
+file_path = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
+field_data = read_mat(file_path)
 # Un-bending the field measurements:
-df = unbend(2000,400, read_mat(filepath))
+df_unbent = unbend(field_data)
+
+# Adding the distance of application of the left and right weight:
+df_unbent$distance_application = distance_weight_sine(df_unbent$x)
+
 # (Re-)computing the deformation:
-df_bend = bend(df, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
+df_bent = bend(df_unbent, elastic_modulus = 2000, shear_modulus = 400, step = 0.02, points = 100, iterations = 15, verbose = TRUE)
 #>  Final torsion angle at the tip (degree) =  12.52822
 
-df_bend
+df_bent
 #>          x            y         z    length  angle_xy    angle_xz   torsion
 #> 1 0.000000 0.000000e+00 0.0000000 0.0000000  0.000000 0.000000000  4.000000
 #> 2 1.005821 2.560607e-05 0.8804207 1.3367185 41.196484 0.001458629  4.032577
@@ -48,7 +53,7 @@ df_bend
 You can plot the results using:
 
 ``` r
-plot_bending(bent = df_bend, unbent = df)
+plot_bending(bent = df_bent, unbent = df_unbent)
 ```
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
@@ -59,7 +64,7 @@ compare with the initial conditions.
 You can even make 3d plots using `plot_bent_3d()`:
 
 ``` r
-plot_bending_3d(df_bend,df)
+plot_bending_3d(df_bent,df_unbent)
 ```
 
 <img src="www/bent.png" width="100%" />
