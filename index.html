@@ -81,14 +81,19 @@
 <p>Here is an example usage:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">biomech</span>)
-<span class="kw">filepath</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata/6_EW01.22_17_kanan.txt"</span>, package = <span class="st">"biomech"</span>)
+<span class="kw">file_path</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata/6_EW01.22_17_kanan.txt"</span>, package = <span class="st">"biomech"</span>)
+<span class="kw">field_data</span> <span class="op">=</span> <span class="fu"><a href="reference/read_mat.html">read_mat</a></span>(<span class="kw">file_path</span>)
 <span class="co"># Un-bending the field measurements:</span>
-<span class="kw">df</span> <span class="op">=</span> <span class="fu"><a href="reference/unbend.html">unbend</a></span>(<span class="fl">2000</span>,<span class="fl">400</span>, <span class="fu"><a href="reference/read_mat.html">read_mat</a></span>(<span class="kw">filepath</span>))
+<span class="kw">df_unbent</span> <span class="op">=</span> <span class="fu"><a href="reference/unbend.html">unbend</a></span>(<span class="kw">field_data</span>)
+
+<span class="co"># Adding the distance of application of the left and right weight:</span>
+<span class="kw">df_unbent</span><span class="op">$</span><span class="kw">distance_application</span> <span class="op">=</span> <span class="fu"><a href="reference/distance_weight_sine.html">distance_weight_sine</a></span>(<span class="kw">df_unbent</span><span class="op">$</span><span class="kw">x</span>)
+
 <span class="co"># (Re-)computing the deformation:</span>
-<span class="kw">df_bend</span> <span class="op">=</span> <span class="fu"><a href="reference/bend.html">bend</a></span>(<span class="kw">df</span>, step = <span class="fl">0.02</span>, points = <span class="fl">100</span>, iterations = <span class="fl">15</span>, verbose = <span class="fl">TRUE</span>)
+<span class="kw">df_bent</span> <span class="op">=</span> <span class="fu"><a href="reference/bend.html">bend</a></span>(<span class="kw">df_unbent</span>, elastic_modulus = <span class="fl">2000</span>, shear_modulus = <span class="fl">400</span>, step = <span class="fl">0.02</span>, points = <span class="fl">100</span>, iterations = <span class="fl">15</span>, verbose = <span class="fl">TRUE</span>)
 <span class="co">#&gt;  Final torsion angle at the tip (degree) =  12.52822</span>
 
-<span class="kw">df_bend</span>
+<span class="kw">df_bent</span>
 <span class="co">#&gt;          x            y         z    length  angle_xy    angle_xz   torsion</span>
 <span class="co">#&gt; 1 0.000000 0.000000e+00 0.0000000 0.0000000  0.000000 0.000000000  4.000000</span>
 <span class="co">#&gt; 2 1.005821 2.560607e-05 0.8804207 1.3367185 41.196484 0.001458629  4.032577</span>
@@ -98,13 +103,13 @@
 </pre></div>
 <p>You can plot the results using:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="reference/plot_bending.html">plot_bending</a></span>(bent = <span class="kw">df_bend</span>, unbent = <span class="kw">df</span>)
+<span class="fu"><a href="reference/plot_bending.html">plot_bending</a></span>(bent = <span class="kw">df_bent</span>, unbent = <span class="kw">df_unbent</span>)
 </pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-2-1.png" width="100%"></p>
 <p>Note that the <code>unbent</code> argument is optional but can be very usefull to compare with the initial conditions.</p>
 <p>You can even make 3d plots using <code>plot_bent_3d()</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="reference/plot_bending.html">plot_bending_3d</a></span>(<span class="kw">df_bend</span>,<span class="kw">df</span>)
+<span class="fu"><a href="reference/plot_bending.html">plot_bending_3d</a></span>(<span class="kw">df_bent</span>,<span class="kw">df_unbent</span>)
 </pre></div>
 <p><img src="www/bent.png" width="100%"></p>
 </div>
