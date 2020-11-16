@@ -16,7 +16,8 @@ optimize_bend(
 )
 }
 \arguments{
-\item{field_data}{Field data (data.frame of x, y and z coordinates of the points)}
+\item{field_data}{data.frame, or list of data.frames with the x, y and z coordinates of the
+observed points. If list of data.frames, each element correspond to a separate beam (e.g. each branch)}
 
 \item{elastic_modulus}{Elasticity modulus (bending, MPa). See details.}
 
@@ -59,10 +60,38 @@ field_data = read_mat(file_path)
 # optimize_bend(field_data, type = "all")
 # Gives:
 # $elastic_modulus
-# [1] 1209.396
+# [1] 1209.622
 # $shear_modulus
-# [1] 67.44096
+# [1] 67.49158
+# $init_values
+# elastic_modulus shear_modulus
+# 1        8154.915      110.9907
+# 2        7070.047     4120.5218
+# 3        9580.339     5798.9579
+# 4        2980.401     4703.5510
+# 5        8860.528      545.3304
+# $optim_values
+# [,1]       [,2]
+# [1,] 1209.316   67.35572
+# [2,] 1209.598   67.27172
+# [3,] 1214.884 8091.98399
+# [4,] 1209.622   67.49158
+# [5,] 1223.161 2126.35615
+# $min_quadratic_error
+# [1] 0.3787925
+# $rep_min_crit
+# [1] 4
+# $plots
+# $plots[[1]]
+# Here comes a ggplot for the first parameter
+# $plots[[2]]
+# Here comes a ggplot for the second parameter
 
 # If only the elastic_modulus is optimized, the shear_modulus has to be fixed:
-#' # optimize_bend(field_data, shear_modulus = 100, type = "bending")
+# optimize_bend(field_data, shear_modulus = 100, type = "bending")
+
+# If the parameters need to be optimized on several beams at the same time (they share
+# the same properties), pass their observations as a list:
+# optimize_bend(list(sim1 = field_data, sim2 = field_data), type = "all")
+
 }

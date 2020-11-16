@@ -16,9 +16,9 @@ compute_error(
 \arguments{
 \item{x, y}{Either the elasticity modulus (bending, MPa) or Shear modulus (torsion, MPa) (see dtails)}
 
-\item{field_data}{Field data (data.frame of x, y and z coordinates of the points)}
+\item{field_data}{Field data (list of data.frames with x, y and z coordinates of the points)}
 
-\item{unbent_data}{Output from \code{unbend(field_data)} + \code{\link[=distance_weight_sine]{distance_weight_sine()}}}
+\item{unbent_data}{List of outputs from \code{unbend(field_data)} + \code{\link[=distance_weight_sine]{distance_weight_sine()}}}
 
 \item{type}{Type of optimization (either "bending","torsion" or "all")}
 

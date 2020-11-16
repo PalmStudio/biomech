@@ -4,7 +4,8 @@
 #' Optimize the elastic_modulus, the shear_modulus or both using
 #' observations.
 #'
-#' @param field_data      Field data (data.frame of x, y and z coordinates of the points)
+#' @param field_data      data.frame, or list of data.frames with the x, y and z coordinates of the
+#' observed points. If list of data.frames, each element correspond to a separate beam (e.g. each branch)
 #' @param elastic_modulus Elasticity modulus (bending, MPa). See details.
 #' @param shear_modulus   Shear modulus (torsion, MPa). See details.
 #' @param type            Type of optimization (either "bending","torsion" or "all")
@@ -24,7 +25,7 @@
 #' - `min_quadratic_error`: minimum quadratic error of all repetitions
 #' - `rep_min_crit`: index of the repetition that gave the minimum quadratic error
 #' - `plots`: plots of optimal value ~ initial value for each parameter to analyze
-#'the sensitivity of the optimized value to the starting points.
+#' the sensitivity of the optimized value to the starting points.
 #'
 #' @export
 #'
@@ -34,12 +35,47 @@
 #' # optimize_bend(field_data, type = "all")
 #' # Gives:
 #' # $elastic_modulus
-#' # [1] 1209.396
+#' # [1] 1209.622
+#
 #' # $shear_modulus
-#' # [1] 67.44096
+#' # [1] 67.49158
+#
+#' # $init_values
+#' # elastic_modulus shear_modulus
+#' # 1        8154.915      110.9907
+#' # 2        7070.047     4120.5218
+#' # 3        9580.339     5798.9579
+#' # 4        2980.401     4703.5510
+#' # 5        8860.528      545.3304
+#
+#' # $optim_values
+#' # [,1]       [,2]
+#' # [1,] 1209.316   67.35572
+#' # [2,] 1209.598   67.27172
+#' # [3,] 1214.884 8091.98399
+#' # [4,] 1209.622   67.49158
+#' # [5,] 1223.161 2126.35615
+#
+#' # $min_quadratic_error
+#' # [1] 0.3787925
+#
+#' # $rep_min_crit
+#' # [1] 4
+#
+#' # $plots
+#' # $plots[[1]]
+#' # Here comes a ggplot for the first parameter
+#
+#' # $plots[[2]]
+#' # Here comes a ggplot for the second parameter
 #'
 #' # If only the elastic_modulus is optimized, the shear_modulus has to be fixed:
-#' #' # optimize_bend(field_data, shear_modulus = 100, type = "bending")
+#' # optimize_bend(field_data, shear_modulus = 100, type = "bending")
+#'
+#' # If the parameters need to be optimized on several beams at the same time (they share
+#' # the same properties), pass their observations as a list:
+#' # optimize_bend(list(sim1 = field_data, sim2 = field_data), type = "all")
+#'
 optimize_bend = function(field_data,
                          elastic_modulus = c(1,10000),
                          shear_modulus = c(1,10000),
@@ -56,15 +92,21 @@ optimize_bend = function(field_data,
       "type","width","height","inclination",
       "torsion","mass","mass_right","mass_left")
 
-  if(!all(required_columns %in% colnames(field_data))){
-    stop("Missing columns in field_data: ",
-         paste(required_columns[!required_columns %in% colnames(field_data)],
-               collapse = ", "))
-  }
+  if(is.data.frame(field_data)) field_data = list(sim1 = field_data)
 
-  df_unbent = unbend(field_data)
-  # Adding the distance of application of the left and right weight:
-  df_unbent$distance_application = distance_weight_sine(df_unbent$x)
+  df_unbent =
+    lapply(field_data, function(x){
+      if(!all(required_columns %in% colnames(x))){
+        stop("Missing columns in field_data: ",
+             paste(required_columns[!required_columns %in% colnames(x)],
+                   collapse = ", "))
+      }
+      df_unbent = unbend(x)
+      # Adding the distance of application of the left and right weight:
+      df_unbent$distance_application = distance_weight_sine(df_unbent$x)
+      df_unbent
+    })
+
 
   if(type != "all"){
     # univariate optimization:
@@ -181,8 +223,8 @@ optimize_bend = function(field_data,
 #' Compute the error of simulation usin field data, field data that is
 #' un-bent, and bending parameters. Mainly used from [optimize_bend()].
 #'
-#' @param field_data      Field data (data.frame of x, y and z coordinates of the points)
-#' @param unbent_data     Output from `unbend(field_data)` + [distance_weight_sine()]
+#' @param field_data      Field data (list of data.frames with x, y and z coordinates of the points)
+#' @param unbent_data     List of outputs from `unbend(field_data)` + [distance_weight_sine()]
 #' @param x,y   Either the elasticity modulus (bending, MPa) or Shear modulus (torsion, MPa) (see dtails)
 #' @param type            Type of optimization (either "bending","torsion" or "all")
 #' @param ...             Further parameters to pass to [bend()]
@@ -209,8 +251,18 @@ compute_error = function(x,y,field_data,unbent_data,
     shear_modulus = x[2]
   }
 
-  df_bent = bend(unbent_data, elastic_modulus = elastic_modulus,
-                 shear_modulus = shear_modulus,...)
+  if(names(field_data) != names(unbent_data)){
+    stop("List of field_data and unbent_data does not match")
+  }
+
+  df_bent =
+    lapply(unbent_data, function(x){
+      bend(x, elastic_modulus = elastic_modulus,
+           shear_modulus = shear_modulus,...)
+    })
+
+  df_bent = data.table::rbindlist(df_bent)
+  field_data = data.table::rbindlist(field_data)
 
   # Quadratic error between simulation and observations (in m):
   npoints = nrow(field_data)
