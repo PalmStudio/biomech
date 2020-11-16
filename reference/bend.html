@@ -112,15 +112,15 @@
     <p>Compute the deformation by applying both bending and torsion</p>
     </div>
 
-    <pre class="usage"><span class='fu'>bend</span>(
-  <span class='kw'>data</span>,
-  <span class='kw'>elastic_modulus</span>,
-  <span class='kw'>shear_modulus</span>,
-  step = <span class='fl'>0.02</span>,
-  points = <span class='fl'>100</span>,
-  iterations = <span class='fl'>15</span>,
-  verbose = <span class='fl'>TRUE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>bend</span><span class='op'>(</span>
+  <span class='va'>data</span>,
+  <span class='va'>elastic_modulus</span>,
+  <span class='va'>shear_modulus</span>,
+  step <span class='op'>=</span> <span class='fl'>0.02</span>,
+  points <span class='op'>=</span> <span class='fl'>100</span>,
+  iterations <span class='op'>=</span> <span class='fl'>15</span>,
+  verbose <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -186,17 +186,17 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>filepath</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/6_EW01.22_17_kanan.txt"</span>, package = <span class='st'>"biomech"</span>)
-<span class='kw'>df</span> <span class='op'>=</span> <span class='fu'><a href='read_mat.html'>read_mat</a></span>(<span class='kw'>filepath</span>)
+    <pre class="examples"><div class='input'><span class='va'>filepath</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/6_EW01.22_17_kanan.txt"</span>, package <span class='op'>=</span> <span class='st'>"biomech"</span><span class='op'>)</span>
+<span class='va'>df</span> <span class='op'>=</span> <span class='fu'><a href='read_mat.html'>read_mat</a></span><span class='op'>(</span><span class='va'>filepath</span><span class='op'>)</span>
 <span class='co'># Un-bending the field measurements:</span>
-<span class='kw'>df</span> <span class='op'>=</span> <span class='fu'><a href='unbend.html'>unbend</a></span>(<span class='kw'>df</span>)
+<span class='va'>df</span> <span class='op'>=</span> <span class='fu'><a href='unbend.html'>unbend</a></span><span class='op'>(</span><span class='va'>df</span><span class='op'>)</span>
 
 <span class='co'># Adding the distance of application of the left and right weight:</span>
-<span class='kw'>df</span><span class='op'>$</span><span class='kw'>distance_application</span> <span class='op'>=</span> <span class='fu'><a href='distance_weight_sine.html'>distance_weight_sine</a></span>(<span class='kw'>df</span><span class='op'>$</span><span class='kw'>x</span>)
+<span class='va'>df</span><span class='op'>$</span><span class='va'>distance_application</span> <span class='op'>=</span> <span class='fu'><a href='distance_weight_sine.html'>distance_weight_sine</a></span><span class='op'>(</span><span class='va'>df</span><span class='op'>$</span><span class='va'>x</span><span class='op'>)</span>
 
 <span class='co'># (Re-)computing the deformation:</span>
-<span class='kw'>df_bend</span> <span class='op'>=</span> <span class='fu'>bend</span>(<span class='kw'>df</span>, elastic_modulus = <span class='fl'>2000</span>, shear_modulus = <span class='fl'>400</span>, step = <span class='fl'>0.02</span>, points = <span class='fl'>100</span>,
-               iterations = <span class='fl'>15</span>, verbose = <span class='fl'>TRUE</span>)
+<span class='va'>df_bend</span> <span class='op'>=</span> <span class='fu'>bend</span><span class='op'>(</span><span class='va'>df</span>, elastic_modulus <span class='op'>=</span> <span class='fl'>2000</span>, shear_modulus <span class='op'>=</span> <span class='fl'>400</span>, step <span class='op'>=</span> <span class='fl'>0.02</span>, points <span class='op'>=</span> <span class='fl'>100</span>,
+               iterations <span class='op'>=</span> <span class='fl'>15</span>, verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  Final torsion angle at the tip (degree) =  12.52822</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

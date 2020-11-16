@@ -114,37 +114,48 @@ observations." />
 observations.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>optimize_bend</span>(
-  <span class='kw'>field_data</span>,
-  elastic_modulus = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>100</span>, <span class='fl'>10000</span>),
-  shear_modulus = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>1000</span>, <span class='fl'>10000</span>),
-  type = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"all"</span>, <span class='st'>"bending"</span>, <span class='st'>"torsion"</span>),
-  tol = <span class='kw'>.Machine</span><span class='op'>$</span><span class='kw'>double.eps</span><span class='op'>^</span><span class='fl'>0.25</span>,
-  <span class='kw'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>optimize_bend</span><span class='op'>(</span>
+  <span class='va'>field_data</span>,
+  elastic_modulus <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>10000</span><span class='op'>)</span>,
+  shear_modulus <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>10000</span><span class='op'>)</span>,
+  type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"all"</span>, <span class='st'>"bending"</span>, <span class='st'>"torsion"</span><span class='op'>)</span>,
+  method <span class='op'>=</span> <span class='st'>"L-BFGS-B"</span>,
+  tol <span class='op'>=</span> <span class='va'>.Machine</span><span class='op'>$</span><span class='va'>double.eps</span><span class='op'>^</span><span class='fl'>0.25</span>,
+  nb_rep <span class='op'>=</span> <span class='fl'>5</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>field_data</th>
-      <td><p>Field data (data.frame of x, y and z coordinates of the points)</p></td>
+      <td><p>data.frame, or list of data.frames with the x, y and z coordinates of the
+observed points. If list of data.frames, each element correspond to a separate beam (e.g. each branch)</p></td>
     </tr>
     <tr>
       <th>elastic_modulus</th>
-      <td><p>Elasticity modulus (bending, MPa) vector: c(min,start,max)</p></td>
+      <td><p>Elasticity modulus (bending, MPa). See details.</p></td>
     </tr>
     <tr>
       <th>shear_modulus</th>
-      <td><p>Shear modulus (torsion, MPa) vector: c(min,start,max)</p></td>
+      <td><p>Shear modulus (torsion, MPa). See details.</p></td>
     </tr>
     <tr>
       <th>type</th>
       <td><p>Type of optimization (either "bending","torsion" or "all")</p></td>
     </tr>
     <tr>
+      <th>method</th>
+      <td><p>Method to use when optimizing one parameter (see <code><a href='https://rdrr.io/r/stats/optim.html'>stats::optim()</a></code>)</p></td>
+    </tr>
+    <tr>
       <th>tol</th>
       <td><p>Tolerance for optimization accuracy</p></td>
+    </tr>
+    <tr>
+      <th>nb_rep</th>
+      <td><p>Number of starting points for the optimization algorithm</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -154,21 +165,62 @@ observations.</p>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The optimized values</p>
+    <p>A list of the outputs:</p><ul>
+<li><p>The best optimized values for each parameter</p></li>
+<li><p><code>init_values</code>: a data.frame with the initial values used for each repetition</p></li>
+<li><p><code>optim_values</code>: a data.frame with the optimized values for each step</p></li>
+<li><p><code>min_quadratic_error</code>: minimum quadratic error of all repetitions</p></li>
+<li><p><code>rep_min_crit</code>: index of the repetition that gave the minimum quadratic error</p></li>
+<li><p><code>plots</code>: plots of optimal value ~ initial value for each parameter to analyze
+the sensitivity of the optimized value to the starting points.</p></li>
+</ul>
+
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The minimim and maximum values are not used when a parameter is not
-optimized, but they still should be provided by the user though.</p>
+    <p>The elastic_modulus and shear_modulus are either provided as a vector
+of min and max values if optimized, or as a single value to force the parameter if
+not optimized.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>file_path</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/6_EW01.22_17_kanan.txt"</span>, package = <span class='st'>"biomech"</span>)
-<span class='kw'>field_data</span> <span class='op'>=</span> <span class='fu'><a href='read_mat.html'>read_mat</a></span>(<span class='kw'>file_path</span>)
+    <pre class="examples"><div class='input'><span class='va'>file_path</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/6_EW01.22_17_kanan.txt"</span>, package <span class='op'>=</span> <span class='st'>"biomech"</span><span class='op'>)</span>
+<span class='va'>field_data</span> <span class='op'>=</span> <span class='fu'><a href='read_mat.html'>read_mat</a></span><span class='op'>(</span><span class='va'>file_path</span><span class='op'>)</span>
 <span class='co'># optimize_bend(field_data, type = "all")</span>
 <span class='co'># Gives:</span>
 <span class='co'># $elastic_modulus</span>
-<span class='co'># [1] 1209.396</span>
+<span class='co'># [1] 1209.622</span>
 <span class='co'># $shear_modulus</span>
-<span class='co'># [1] 67.44096</span>
+<span class='co'># [1] 67.49158</span>
+<span class='co'># $init_values</span>
+<span class='co'># elastic_modulus shear_modulus</span>
+<span class='co'># 1        8154.915      110.9907</span>
+<span class='co'># 2        7070.047     4120.5218</span>
+<span class='co'># 3        9580.339     5798.9579</span>
+<span class='co'># 4        2980.401     4703.5510</span>
+<span class='co'># 5        8860.528      545.3304</span>
+<span class='co'># $optim_values</span>
+<span class='co'># [,1]       [,2]</span>
+<span class='co'># [1,] 1209.316   67.35572</span>
+<span class='co'># [2,] 1209.598   67.27172</span>
+<span class='co'># [3,] 1214.884 8091.98399</span>
+<span class='co'># [4,] 1209.622   67.49158</span>
+<span class='co'># [5,] 1223.161 2126.35615</span>
+<span class='co'># $min_quadratic_error</span>
+<span class='co'># [1] 0.3787925</span>
+<span class='co'># $rep_min_crit</span>
+<span class='co'># [1] 4</span>
+<span class='co'># $plots</span>
+<span class='co'># $plots[[1]]</span>
+<span class='co'># Here comes a ggplot for the first parameter</span>
+<span class='co'># $plots[[2]]</span>
+<span class='co'># Here comes a ggplot for the second parameter</span>
+
+<span class='co'># If only the elastic_modulus is optimized, the shear_modulus has to be fixed:</span>
+<span class='co'># optimize_bend(field_data, shear_modulus = 100, type = "bending")</span>
+
+<span class='co'># If the parameters need to be optimized on several beams at the same time (they share</span>
+<span class='co'># the same properties), pass their observations as a list:</span>
+<span class='co'># optimize_bend(list(sim1 = field_data, sim2 = field_data), type = "all")</span>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -2,7 +2,7 @@ pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2020-09-18T16:17Z
+last_built: 2020-11-16T15:51Z
 urls:
   reference: https://palmstudio.github.io/biomech/reference
   article: https://palmstudio.github.io/biomech/articles

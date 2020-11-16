@@ -93,10 +93,9 @@
 <h2 class="hasAnchor">
 <a href="#1-installation" class="anchor"></a>1. Installation</h2>
 <p>You can install biomech from <a href="https://github.com/">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="co"># install.packages("devtools")</span>
-<span class="kw">devtools</span>::<span class="fu">install_github</span>(<span class="st">"PalmStudio/biomech"</span>)
-</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"PalmStudio/biomech"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="2-examples" class="section level2">
 <h2 class="hasAnchor">
@@ -114,11 +113,10 @@
 <p><img src="https://raw.githubusercontent.com/PalmStudio/biomech/master/www/palm_leaf.png"></p>
 <p>See (Perez 2017) for more information about the subject.</p>
 <p>The example field data is available from the package and can be read using:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">biomech</span>)
-<span class="kw">file_path</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata/6_EW01.22_17_kanan.txt"</span>, package = <span class="st">"biomech"</span>)
-<span class="kw">field_data</span> <span class="op">=</span> <span class="fu"><a href="reference/read_mat.html">read_mat</a></span>(<span class="kw">file_path</span>)
-</pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">biomech</span><span class="op">)</span>
+<span class="va">file_path</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/6_EW01.22_17_kanan.txt"</span>, package <span class="op">=</span> <span class="st">"biomech"</span><span class="op">)</span>
+<span class="va">field_data</span> <span class="op">=</span> <span class="fu"><a href="reference/read_mat.html">read_mat</a></span><span class="op">(</span><span class="va">file_path</span><span class="op">)</span></code></pre></div>
 <p>Here is what it looks like:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">#&gt;    distance type   width  height inclination torsion     x     y    z   mass</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="co">#&gt; V1     0.00    1 0.07550 0.04110        48.8       4 0.000 0.000 0.00 0.0000</span></span>
@@ -137,10 +135,9 @@
 <h4 class="hasAnchor">
 <a href="#212-un-bending" class="anchor"></a>2.1.2 Un-bending</h4>
 <p>We can use the field data to try our bending model. But first, it must be “un-bent” back to a straight line. This is made using <code><a href="reference/unbend.html">unbend()</a></code>, such as:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="co"># Un-bending the field measurements:</span>
-<span class="kw">df_unbent</span> <span class="op">=</span> <span class="fu"><a href="reference/unbend.html">unbend</a></span>(<span class="kw">field_data</span>)
-</pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Un-bending the field measurements:</span>
+<span class="va">df_unbent</span> <span class="op">=</span> <span class="fu"><a href="reference/unbend.html">unbend</a></span><span class="op">(</span><span class="va">field_data</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 <div id="22-bending-model" class="section level3">
@@ -148,29 +145,25 @@
 <a href="#22-bending-model" class="anchor"></a>2.2 Bending model</h3>
 <p>We can use <code><a href="reference/bend.html">bend()</a></code> to bend a straight beam providing initial values and known elastic and shear modulus.</p>
 <p>We can try it out on our example leaf data. But first, we have to compute a variable that is missing from our <code>df_unbent</code> data.frame: the distance of application of the mass of the leaflets on the right and left sides of each segment. We can approximate this using a sine function:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="co"># Adding the distance of application of the left and right weight (leaflets):</span>
-<span class="kw">df_unbent</span><span class="op">$</span><span class="kw">distance_application</span> <span class="op">=</span> <span class="fu"><a href="reference/distance_weight_sine.html">distance_weight_sine</a></span>(<span class="kw">df_unbent</span><span class="op">$</span><span class="kw">x</span>)
-</pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Adding the distance of application of the left and right weight (leaflets):</span>
+<span class="va">df_unbent</span><span class="op">$</span><span class="va">distance_application</span> <span class="op">=</span> <span class="fu"><a href="reference/distance_weight_sine.html">distance_weight_sine</a></span><span class="op">(</span><span class="va">df_unbent</span><span class="op">$</span><span class="va">x</span><span class="op">)</span></code></pre></div>
 <p>Know we’re ready to go with our model, using some expert knowledge to estimate the elastic and shear modulus:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="co"># (Re-)computing the deformation:</span>
-<span class="kw">df_bent</span> <span class="op">=</span> <span class="fu"><a href="reference/bend.html">bend</a></span>(<span class="kw">df_unbent</span>, elastic_modulus = <span class="fl">2000</span>, shear_modulus = <span class="fl">400</span>)
-<span class="co">#&gt;  Final torsion angle at the tip (degree) =  12.52822</span>
-</pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># (Re-)computing the deformation:</span>
+<span class="va">df_bent</span> <span class="op">=</span> <span class="fu"><a href="reference/bend.html">bend</a></span><span class="op">(</span><span class="va">df_unbent</span>, elastic_modulus <span class="op">=</span> <span class="fl">2000</span>, shear_modulus <span class="op">=</span> <span class="fl">400</span><span class="op">)</span>
+<span class="co">#&gt;  Final torsion angle at the tip (degree) =  12.52822</span></code></pre></div>
 </div>
 <div id="23-plotting" class="section level3">
 <h3 class="hasAnchor">
 <a href="#23-plotting" class="anchor"></a>2.3 Plotting</h3>
 <p>We can now plot the results using <code><a href="reference/plot_bending.html">plot_bending()</a></code>. We want to compare the observed data with the simulated data. We also want to check if the straight line was right. Let’s put all three on a single plot:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="fu"><a href="reference/plot_bending.html">plot_bending</a></span>(Observed = <span class="kw">field_data</span>, <span class="st">"Un-Bent obs."</span> = <span class="kw">df_unbent</span>, Modeled = <span class="kw">df_bent</span>)
-</pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/plot_bending.html">plot_bending</a></span><span class="op">(</span>Observed <span class="op">=</span> <span class="va">field_data</span>, <span class="st">"Un-Bent obs."</span> <span class="op">=</span> <span class="va">df_unbent</span>, Modeled <span class="op">=</span> <span class="va">df_bent</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-6-1.png" width="100%"></p>
 <p>We can even make a 3d plots using <code>plot_bent_3d()</code>:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="fu"><a href="reference/plot_bending.html">plot_bending_3d</a></span>(Observed = <span class="kw">field_data</span>, <span class="st">"Un-Bent obs."</span> = <span class="kw">df_unbent</span>, Modeled = <span class="kw">df_bent</span>)
-</pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/plot_bending.html">plot_bending_3d</a></span><span class="op">(</span>Observed <span class="op">=</span> <span class="va">field_data</span>, <span class="st">"Un-Bent obs."</span> <span class="op">=</span> <span class="va">df_unbent</span>, Modeled <span class="op">=</span> <span class="va">df_bent</span><span class="op">)</span></code></pre></div>
 <p><img src="https://raw.githubusercontent.com/PalmStudio/biomech/master/www/bent.png"></p>
 <p>OK, not bad. But the adjustment is not really that close to the measurement.</p>
 </div>
@@ -178,28 +171,25 @@
 <h3 class="hasAnchor">
 <a href="#24-optimization" class="anchor"></a>2.4 Optimization</h3>
 <p><code><a href="reference/optimize_bend.html">optimize_bend()</a></code> can help us find out the right values for both our parameters:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="kw">params</span> <span class="op">=</span> <span class="fu"><a href="reference/optimize_bend.html">optimize_bend</a></span>(<span class="kw">field_data</span>, type = <span class="st">"all"</span>)
-</pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">params</span> <span class="op">=</span> <span class="fu"><a href="reference/optimize_bend.html">optimize_bend</a></span><span class="op">(</span><span class="va">field_data</span>, type <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></code></pre></div>
 <p>Here are our optimized values:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="kw">params</span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">params</span>
 <span class="co">#&gt; $elastic_modulus</span>
 <span class="co">#&gt; [1] 1209.396</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $shear_modulus</span>
-<span class="co">#&gt; [1] 67.44096</span>
-</pre></div>
+<span class="co">#&gt; [1] 67.44096</span></code></pre></div>
 <p>And here is a the resulting plot:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="kw">df_bent_optim</span> <span class="op">=</span> <span class="fu"><a href="reference/bend.html">bend</a></span>(<span class="kw">df_unbent</span>, elastic_modulus = <span class="kw">params</span><span class="op">$</span><span class="kw">elastic_modulus</span>,
-                     shear_modulus = <span class="kw">params</span><span class="op">$</span><span class="kw">shear_modulus</span>)
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">df_bent_optim</span> <span class="op">=</span> <span class="fu"><a href="reference/bend.html">bend</a></span><span class="op">(</span><span class="va">df_unbent</span>, elastic_modulus <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">elastic_modulus</span>,
+                     shear_modulus <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">shear_modulus</span><span class="op">)</span>
 <span class="co">#&gt;  Final torsion angle at the tip (degree) =  53.80096</span>
 
-<span class="fu"><a href="reference/plot_bending.html">plot_bending</a></span>(Observed = <span class="kw">field_data</span>, <span class="st">"Un-Bent obs."</span> = <span class="kw">df_unbent</span>, 
-             Modeled = <span class="kw">df_bent</span>,
-             <span class="st">"Modeled (optimized)"</span> = <span class="kw">df_bent_optim</span>)
-</pre></div>
+<span class="fu"><a href="reference/plot_bending.html">plot_bending</a></span><span class="op">(</span>Observed <span class="op">=</span> <span class="va">field_data</span>, <span class="st">"Un-Bent obs."</span> <span class="op">=</span> <span class="va">df_unbent</span>, 
+             Modeled <span class="op">=</span> <span class="va">df_bent</span>,
+             <span class="st">"Modeled (optimized)"</span> <span class="op">=</span> <span class="va">df_bent_optim</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-11-1.png" width="100%"></p>
 </div>
 </div>

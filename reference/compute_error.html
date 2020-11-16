@@ -114,14 +114,14 @@ un-bent, and bending parameters. Mainly used from optimize_bend()." />
 un-bent, and bending parameters. Mainly used from <code><a href='optimize_bend.html'>optimize_bend()</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>compute_error</span>(
-  <span class='kw'>x</span>,
-  <span class='kw'>y</span>,
-  <span class='kw'>field_data</span>,
-  <span class='kw'>unbent_data</span>,
-  type = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"all"</span>, <span class='st'>"bending"</span>, <span class='st'>"torsion"</span>),
-  <span class='kw'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>compute_error</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  <span class='va'>y</span>,
+  <span class='va'>field_data</span>,
+  <span class='va'>unbent_data</span>,
+  type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"all"</span>, <span class='st'>"bending"</span>, <span class='st'>"torsion"</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -132,11 +132,11 @@ un-bent, and bending parameters. Mainly used from <code><a href='optimize_bend.h
     </tr>
     <tr>
       <th>field_data</th>
-      <td><p>Field data (data.frame of x, y and z coordinates of the points)</p></td>
+      <td><p>Field data (list of data.frames with x, y and z coordinates of the points)</p></td>
     </tr>
     <tr>
       <th>unbent_data</th>
-      <td><p>Output from <code><a href='unbend.html'>unbend(field_data)</a></code> + <code><a href='distance_weight_sine.html'>distance_weight_sine()</a></code></p></td>
+      <td><p>List of outputs from <code><a href='unbend.html'>unbend(field_data)</a></code> + <code><a href='distance_weight_sine.html'>distance_weight_sine()</a></code></p></td>
     </tr>
     <tr>
       <th>type</th>
