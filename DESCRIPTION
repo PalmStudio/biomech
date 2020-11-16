@@ -1,7 +1,7 @@
 Package: biomech
 Type: Package
 Title: Compute Beam Bending and Torsion
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(person(given = "Remi", family = "Vezy", email = "remi.vezy@cirad.fr", role = c("aut","cre"),comment = c(ORCID = "0000-0002-0808-1461")),
              person(given = "Loic", family = "Brancheriau", email = "loic.brancheriau@cirad.fr", role = c("aut")),
              person(given = "Raphael", family = "Perez", email = "raphael.perez@cirad.fr", role = c("aut")),

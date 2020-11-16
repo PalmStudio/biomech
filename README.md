@@ -154,6 +154,7 @@ parameters:
 
 ``` r
 params = optimize_bend(field_data, type = "all")
+#> Maximum torsion angle (degree) =  29.57145(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  28.85562(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  27.33313(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  25.12013(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  22.37996(!) Hypothesis of small displacements not verified for TORSION(!)
 ```
 
 Here are our optimized values:
@@ -161,18 +162,50 @@ Here are our optimized values:
 ``` r
 params
 #> $elastic_modulus
-#> [1] 1209.396
+#> [1] 1209.601
 #> 
 #> $shear_modulus
-#> [1] 67.44096
+#> [1] 67.43715
+#> 
+#> $init_values
+#>   elastic_modulus shear_modulus
+#> 1        4765.586     4020.2872
+#> 2        4670.266      398.4761
+#> 3        1953.761     4866.4421
+#> 4        8768.219     6081.4540
+#> 5        2850.898     2772.4455
+#> 
+#> $optim_values
+#>          [,1]     [,2]
+#> [1,] 1209.601 67.43715
+#> [2,] 1209.500 67.48065
+#> [3,] 1209.518 67.29157
+#> [4,] 1209.673 67.39428
+#> [5,] 1209.439 67.43149
+#> 
+#> $min_quadratic_error
+#> [1] 0.3787923
+#> 
+#> $rep_min_crit
+#> [1] 1
+#> 
+#> $plots
+#> $plots[[1]]
 ```
+
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+
+    #> 
+    #> $plots[[2]]
+
+<img src="man/figures/README-unnamed-chunk-10-2.png" width="100%" />
 
 And here is a the resulting plot:
 
 ``` r
 df_bent_optim = bend(df_unbent, elastic_modulus = params$elastic_modulus,
                      shear_modulus = params$shear_modulus)
-#>  Final torsion angle at the tip (degree) =  53.80096
+#>  Final torsion angle at the tip (degree) =  53.80359
 
 plot_bending(Observed = field_data, "Un-Bent obs." = df_unbent, 
              Modeled = df_bent,
@@ -183,7 +216,7 @@ plot_bending(Observed = field_data, "Un-Bent obs." = df_unbent,
 
 ## 3\. References
 
-<div id="refs" class="references">
+<div id="refs" class="references hanging-indent">
 
 <div id="ref-perezAnalyzingModellingGenetic2017">
 

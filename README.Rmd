@@ -127,12 +127,12 @@ OK, not bad. But the adjustment is not really that close to the measurement.
 
 `optimize_bend()` can help us find out the right values for both our parameters:
 
-```{r eval=FALSE}
+```{r eval=TRUE}
 params = optimize_bend(field_data, type = "all")
 ```
 
 ```{r include=FALSE}
-params = list(elastic_modulus = 1209.396, shear_modulus = 67.44096)
+# params = list(elastic_modulus = 1209.396, shear_modulus = 67.44096)
 ```
 
 Here are our optimized values:
