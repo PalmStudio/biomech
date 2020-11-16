@@ -154,7 +154,7 @@ parameters:
 
 ``` r
 params = optimize_bend(field_data, type = "all")
-#> Maximum torsion angle (degree) =  29.57145(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  28.85562(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  27.33313(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  25.12013(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  22.37996(!) Hypothesis of small displacements not verified for TORSION(!)
+#> Maximum torsion angle (degree) =  21.23896(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  66.05235(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  59.79778(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  46.09996(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  29.3099(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  24.01283(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  28.30911(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  31.51136(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  33.91736(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  35.7381(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  37.11682(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  38.14507(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  198.5444(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  76.53029(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  62.57131(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  113.5204(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  133.4081(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  143.8365(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  146.7137(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  136.5098(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  111.3382(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  77.86732(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  46.55959(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  22.20298(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  23.08456(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  22.70732(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  21.9388(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  35.54625(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  34.38083(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  31.84451(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  28.211(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  23.84788(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  31.43281(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  30.59213(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  28.78884(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  26.17739(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  22.97221(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  60.64315(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  55.73092(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  44.82328(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  30.9349(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  23.30764(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  26.77774(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  29.44275(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  31.50391(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  33.10749(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  34.35567(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  21.9441(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  21.61672(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  52.5069(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  49.18644(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  41.78473(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  31.90912(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  21.34358(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  21.61303(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  23.95111(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  25.81953(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  27.31975(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  26.48967(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  25.95439(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  24.83348(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  23.19612(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  21.1415(!) Hypothesis of small displacements not verified for TORSION(!)
 ```
 
 Here are our optimized values:
@@ -162,32 +162,32 @@ Here are our optimized values:
 ``` r
 params
 #> $elastic_modulus
-#> [1] 1209.601
+#> [1] 1209.494
 #> 
 #> $shear_modulus
-#> [1] 67.43715
+#> [1] 67.34194
 #> 
 #> $init_values
 #>   elastic_modulus shear_modulus
-#> 1        4765.586     4020.2872
-#> 2        4670.266      398.4761
-#> 3        1953.761     4866.4421
-#> 4        8768.219     6081.4540
-#> 5        2850.898     2772.4455
+#> 1        9977.795      895.3104
+#> 2        2549.910     1205.8976
+#> 3        5706.925     9881.9808
+#> 4        7218.320     5553.8840
+#> 5        1220.196     5441.8022
 #> 
 #> $optim_values
 #>          [,1]     [,2]
-#> [1,] 1209.601 67.43715
-#> [2,] 1209.500 67.48065
-#> [3,] 1209.518 67.29157
-#> [4,] 1209.673 67.39428
-#> [5,] 1209.439 67.43149
+#> [1,] 1209.740 67.42357
+#> [2,] 1209.133 67.37590
+#> [3,] 1209.385 67.34608
+#> [4,] 1209.494 67.34194
+#> [5,] 1209.446 67.54574
 #> 
 #> $min_quadratic_error
 #> [1] 0.3787923
 #> 
 #> $rep_min_crit
-#> [1] 1
+#> [1] 4
 #> 
 #> $plots
 #> $plots[[1]]
@@ -205,7 +205,7 @@ And here is a the resulting plot:
 ``` r
 df_bent_optim = bend(df_unbent, elastic_modulus = params$elastic_modulus,
                      shear_modulus = params$shear_modulus)
-#>  Final torsion angle at the tip (degree) =  53.80359
+#>  Final torsion angle at the tip (degree) =  53.87164
 
 plot_bending(Observed = field_data, "Un-Bent obs." = df_unbent, 
              Modeled = df_bent,
@@ -216,7 +216,7 @@ plot_bending(Observed = field_data, "Un-Bent obs." = df_unbent,
 
 ## 3\. References
 
-<div id="refs" class="references hanging-indent">
+<div id="refs" class="references">
 
 <div id="ref-perezAnalyzingModellingGenetic2017">
 
