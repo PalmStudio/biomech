@@ -6,36 +6,52 @@
 \usage{
 optimize_bend(
   field_data,
-  elastic_modulus = c(1, 100, 10000),
-  shear_modulus = c(1, 1000, 10000),
+  elastic_modulus = c(1, 10000),
+  shear_modulus = c(1, 10000),
   type = c("all", "bending", "torsion"),
+  method = "L-BFGS-B",
   tol = .Machine$double.eps^0.25,
+  nb_rep = 5,
   ...
 )
 }
 \arguments{
 \item{field_data}{Field data (data.frame of x, y and z coordinates of the points)}
 
-\item{elastic_modulus}{Elasticity modulus (bending, MPa) vector: c(min,start,max)}
+\item{elastic_modulus}{Elasticity modulus (bending, MPa). See details.}
 
-\item{shear_modulus}{Shear modulus (torsion, MPa) vector: c(min,start,max)}
+\item{shear_modulus}{Shear modulus (torsion, MPa). See details.}
 
 \item{type}{Type of optimization (either "bending","torsion" or "all")}
 
+\item{method}{Method to use when optimizing one parameter (see \code{\link[stats:optim]{stats::optim()}})}
+
 \item{tol}{Tolerance for optimization accuracy}
+
+\item{nb_rep}{Number of starting points for the optimization algorithm}
 
 \item{...}{Further parameters to pass to \code{\link[=bend]{bend()}}}
 }
 \value{
-The optimized values
+A list of the outputs:
+\itemize{
+\item The best optimized values for each parameter
+\item \code{init_values}: a data.frame with the initial values used for each repetition
+\item \code{optim_values}: a data.frame with the optimized values for each step
+\item \code{min_quadratic_error}: minimum quadratic error of all repetitions
+\item \code{rep_min_crit}: index of the repetition that gave the minimum quadratic error
+\item \code{plots}: plots of optimal value ~ initial value for each parameter to analyze
+the sensitivity of the optimized value to the starting points.
+}
 }
 \description{
 Optimize the elastic_modulus, the shear_modulus or both using
 observations.
 }
 \details{
-The minimim and maximum values are not used when a parameter is not
-optimized, but they still should be provided by the user though.
+The elastic_modulus and shear_modulus are either provided as a vector
+of min and max values if optimized, or as a single value to force the parameter if
+not optimized.
 }
 \examples{
 file_path = system.file("extdata/6_EW01.22_17_kanan.txt", package = "biomech")
@@ -46,4 +62,7 @@ field_data = read_mat(file_path)
 # [1] 1209.396
 # $shear_modulus
 # [1] 67.44096
+
+# If only the elastic_modulus is optimized, the shear_modulus has to be fixed:
+#' # optimize_bend(field_data, shear_modulus = 100, type = "bending")
 }
