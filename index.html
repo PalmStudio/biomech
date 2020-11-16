@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">biomech</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -172,20 +172,50 @@
 <a href="#24-optimization" class="anchor"></a>2.4 Optimization</h3>
 <p><code><a href="reference/optimize_bend.html">optimize_bend()</a></code> can help us find out the right values for both our parameters:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">params</span> <span class="op">=</span> <span class="fu"><a href="reference/optimize_bend.html">optimize_bend</a></span><span class="op">(</span><span class="va">field_data</span>, type <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">params</span> <span class="op">=</span> <span class="fu"><a href="reference/optimize_bend.html">optimize_bend</a></span><span class="op">(</span><span class="va">field_data</span>, type <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span>
+<span class="co">#&gt; Maximum torsion angle (degree) =  29.57145(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  28.85562(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  27.33313(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  25.12013(!) Hypothesis of small displacements not verified for TORSION(!)Maximum torsion angle (degree) =  22.37996(!) Hypothesis of small displacements not verified for TORSION(!)</span></code></pre></div>
 <p>Here are our optimized values:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">params</span>
 <span class="co">#&gt; $elastic_modulus</span>
-<span class="co">#&gt; [1] 1209.396</span>
+<span class="co">#&gt; [1] 1209.601</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $shear_modulus</span>
-<span class="co">#&gt; [1] 67.44096</span></code></pre></div>
+<span class="co">#&gt; [1] 67.43715</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $init_values</span>
+<span class="co">#&gt;   elastic_modulus shear_modulus</span>
+<span class="co">#&gt; 1        4765.586     4020.2872</span>
+<span class="co">#&gt; 2        4670.266      398.4761</span>
+<span class="co">#&gt; 3        1953.761     4866.4421</span>
+<span class="co">#&gt; 4        8768.219     6081.4540</span>
+<span class="co">#&gt; 5        2850.898     2772.4455</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $optim_values</span>
+<span class="co">#&gt;          [,1]     [,2]</span>
+<span class="co">#&gt; [1,] 1209.601 67.43715</span>
+<span class="co">#&gt; [2,] 1209.500 67.48065</span>
+<span class="co">#&gt; [3,] 1209.518 67.29157</span>
+<span class="co">#&gt; [4,] 1209.673 67.39428</span>
+<span class="co">#&gt; [5,] 1209.439 67.43149</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $min_quadratic_error</span>
+<span class="co">#&gt; [1] 0.3787923</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $rep_min_crit</span>
+<span class="co">#&gt; [1] 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $plots</span>
+<span class="co">#&gt; $plots[[1]]</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-10-1.png" width="100%"></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="co">#&gt; $plots[[2]]</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-10-2.png" width="100%"></p>
 <p>And here is a the resulting plot:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df_bent_optim</span> <span class="op">=</span> <span class="fu"><a href="reference/bend.html">bend</a></span><span class="op">(</span><span class="va">df_unbent</span>, elastic_modulus <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">elastic_modulus</span>,
                      shear_modulus <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">shear_modulus</span><span class="op">)</span>
-<span class="co">#&gt;  Final torsion angle at the tip (degree) =  53.80096</span>
+<span class="co">#&gt;  Final torsion angle at the tip (degree) =  53.80359</span>
 
 <span class="fu"><a href="reference/plot_bending.html">plot_bending</a></span><span class="op">(</span>Observed <span class="op">=</span> <span class="va">field_data</span>, <span class="st">"Un-Bent obs."</span> <span class="op">=</span> <span class="va">df_unbent</span>, 
              Modeled <span class="op">=</span> <span class="va">df_bent</span>,
@@ -196,7 +226,7 @@
 <div id="3-references" class="section level2">
 <h2 class="hasAnchor">
 <a href="#3-references" class="anchor"></a>3. References</h2>
-<div id="refs" class="references">
+<div id="refs" class="references hanging-indent">
 <div id="ref-perezAnalyzingModellingGenetic2017">
 <p>Perez, Raphaël. 2017. “Analyzing and Modelling the Genetic Variability of Aerial Architecture and Light Interception of Oil Palm (Elaeis Guineensis Jacq).” PhD thesis, Montpellier, SupAgro.</p>
 </div>
