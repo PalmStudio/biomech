@@ -38,20 +38,16 @@ InertieFlexRota = function(b, h, agDeg, sct, N = 100){
   matIndLigne = matrix(rep(t(iterN), iterM[length(iterM)]), ncol = iterM[length(iterM)])
   matIndColonne = matrix(rep(iterM, iterN[length(iterN)]), nrow = iterN[length(iterN)], byrow = TRUE)
 
-  vecPresenceSection = section
-  vecIndLigne = matIndLigne
-  vecIndColonne = matIndColonne
-
   # Centre de gravite
-  ng = sum(vecPresenceSection * vecIndLigne) / sum(vecPresenceSection)
-  mg = sum(vecPresenceSection * vecIndColonne) / sum(vecPresenceSection)
+  ng = sum(section * matIndLigne) / sum(section)
+  mg = sum(section * matIndColonne) / sum(section)
 
   # Inerties et surface
   angleRadian = agDeg * pi / 180
   rotMatrix = matrix(c(cos(angleRadian), -sin(angleRadian), sin(angleRadian), cos(angleRadian)), nrow = 2, byrow = TRUE)
 
-  Point_x = vecPresenceSection * ((vecIndColonne - mg) * pas)
-  Point_y = vecPresenceSection * ((vecIndLigne - ng) * pas)
+  Point_x = section * ((matIndColonne - mg) * pas)
+  Point_y = section * ((matIndLigne - ng) * pas)
 
   Point = matrix(c(Point_x, Point_y), nrow = 2, byrow = TRUE)
   rotPoint = rotMatrix %*% Point
@@ -62,7 +58,7 @@ InertieFlexRota = function(b, h, agDeg, sct, N = 100){
   dS  = pas^2
   IgFlex = sum(y^2) * dS
   IgTor = sum(x^2 + y^2) * dS
-  Sr = sum(vecPresenceSection) * dS
+  Sr = sum(section) * dS
 
   list(IgFlex = IgFlex, IgTor = IgTor, Sr = Sr)
 }
@@ -93,13 +89,10 @@ Remplir= function(section, sct){
     matIndLigne = matrix(rep(t(iterN), iterM[length(iterM)]), ncol = iterM[length(iterM)])
     matIndColonne = matrix(rep(iterM, iterN[length(iterN)]), nrow = iterN[length(iterN)], byrow = TRUE)
 
-    vecIndLigne = matIndLigne
-    vecIndColonne = matIndColonne
+    n13 = matIndColonne * b13[1] + b13[2]
+    n23 = matIndColonne * b23[1] + b23[2]
 
-    n13 = vecIndColonne * b13[1] + b13[2]
-    n23 = vecIndColonne * b23[1] + b23[2]
-
-    section = vecIndLigne <= n13 & vecIndLigne <= n23
+    section = matIndLigne <= n13 & matIndLigne <= n23
 
   }
 
@@ -120,13 +113,10 @@ Remplir= function(section, sct){
     matIndLigne = matrix(rep(t(iterN), iterM[length(iterM)]), ncol = iterM[length(iterM)])
     matIndColonne = matrix(rep(iterM, iterN[length(iterN)]), nrow = iterN[length(iterN)], byrow = TRUE)
 
-    vecIndLigne = matIndLigne
-    vecIndColonne = matIndColonne
+    n13 = matIndColonne * b13[1] + b13[2]
+    n23 = matIndColonne * b23[1] + b23[2]
 
-    n13 = vecIndColonne * b13[1] + b13[2]
-    n23 = vecIndColonne * b23[1] + b23[2]
-
-    section = vecIndLigne >= n13 & vecIndLigne >= n23
+    section = matIndLigne >= n13 & matIndLigne >= n23
   }
 
   # sct = 4 : ellipse
@@ -143,9 +133,6 @@ Remplir= function(section, sct){
     matIndLigne = matrix(rep(t(iterN), iterM[length(iterM)]), ncol = iterM[length(iterM)])
     matIndColonne = matrix(rep(iterM, iterN[length(iterN)]), nrow = iterN[length(iterN)], byrow = TRUE)
 
-    vecIndLigne = matIndLigne
-    vecIndColonne = matIndColonne
-
     if(nrow(section) >= ncol(section)){
 
       mf = ncol(section) / 2
@@ -153,8 +140,8 @@ Remplir= function(section, sct){
       nf1 = (a - c)
       nf2 = 2 * c + (a - c)
 
-      dist1 = sqrt((vecIndLigne - nf1)^2 + (vecIndColonne - mf)^2)
-      dist2 = sqrt((vecIndLigne - nf2)^2 + (vecIndColonne - mf)^2)
+      dist1 = sqrt((matIndLigne - nf1)^2 + (matIndColonne - mf)^2)
+      dist2 = sqrt((matIndLigne - nf2)^2 + (matIndColonne - mf)^2)
 
       section = ((dist1 + dist2) <= (2 * a))
     }
@@ -166,8 +153,8 @@ Remplir= function(section, sct){
       mf1 = (a - c)
       mf2 = 2 * c + (a - c)
 
-      dist1 = sqrt((vecIndLigne - nf)^2 + (vecIndColonne - mf1)^2)
-      dist2 = sqrt((vecIndLigne - nf)^2 + (vecIndColonne - mf2)^2)
+      dist1 = sqrt((matIndLigne - nf)^2 + (matIndColonne - mf1)^2)
+      dist2 = sqrt((matIndLigne - nf)^2 + (matIndColonne - mf2)^2)
 
       section = ((dist1 + dist2) <= (2 * a))
     }
@@ -188,10 +175,7 @@ Remplir= function(section, sct){
     matIndLigne = matrix(rep(t(iterN), iterM[length(iterM)]), ncol = iterM[length(iterM)])
     matIndColonne = matrix(rep(iterM, iterN[length(iterN)]), nrow = iterN[length(iterN)], byrow = TRUE)
 
-    vecIndLigne = matIndLigne
-    vecIndColonne = matIndColonne
-
-    dist = sqrt((vecIndLigne - n0)^2 + (vecIndColonne - m0)^2)
+    dist = sqrt((matIndLigne - n0)^2 + (matIndColonne - m0)^2)
     section = dist <= rayon
   }
   section

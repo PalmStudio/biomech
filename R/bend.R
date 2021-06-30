@@ -8,6 +8,7 @@
 #' @param step Length of the segments that discretize the object (m).
 #' @param points Number of points used in the grid discretizing the section.
 #' @param iterations Number of iterations to compute the torsion and bending
+#' @param all_points Boolean. Return all points or only the ones corresponding to the input data?
 #' @param verbose Boolean. Return information during procress?
 #'
 #' @details The data argument is a [data.frame()] with each row being a point and each column being:
@@ -48,7 +49,7 @@
 #' df_bend = bend(df, elastic_modulus = 2000, shear_modulus = 400, step = 0.02, points = 100,
 #'                iterations = 15, verbose = TRUE)
 bend = function(data,elastic_modulus,shear_modulus, step = 0.02, points = 100,
-                iterations = 15, verbose = TRUE){
+                iterations = 15, all_points = TRUE, verbose = TRUE){
 
   vecRotFlex = matrix(0, ncol = 1, nrow = 3)
 
@@ -141,14 +142,6 @@ bend = function(data,elastic_modulus,shear_modulus, step = 0.02, points = 100,
   if((vecDist_P2P1[2] > (step + valEpsilon)) | (vecDist_P2P1[2] < (step - valEpsilon))) stop('Point distance too narrow')
   if((length(vecX) != Nlin)) stop('length(vecX) != Nlin')
 
-  oriX = vecX
-  oriY = vecY
-  oriZ = vecZ
-
-  oriAglXY = vecAngle_XY
-  oriAglXZ = vecAngle_XZ
-  oriTor = vecAglTor
-
   # Increment de poids pour le calcul iteratif ===
   vecMOE = vecMOE * 1e6
   vecG = vecG * 1e6
@@ -159,7 +152,7 @@ bend = function(data,elastic_modulus,shear_modulus, step = 0.02, points = 100,
   vPoidsFeuillesD = vPoidsFeuillesD / iterations
   vPoidsFeuillesG = vPoidsFeuillesG / iterations
 
-  SomCum_vecAglTor = oriTor # rotation geometrique et de la section
+  SomCum_vecAglTor = vecAglTor # rotation geometrique et de la section
 
   for(iterPoids in 1 : iterations){
 
@@ -220,13 +213,11 @@ bend = function(data,elastic_modulus,shear_modulus, step = 0.02, points = 100,
     # Calcul classique de la deformee (delta de distance)
     fct = vecMoment / (vecMOE * vecInertieFlex)
 
-    vecInteg = rep(0, Nlin)
-    vecInteg = cumsum(fct[seq(Nlin,1,-1)] * step)
-    vecInteg = vecInteg[seq(Nlin,1,-1)]
+    vecAngleFlexion = cumsum(fct[seq(Nlin,1,-1)] * step)
+    vecAngleFlexion = vecAngleFlexion[seq(Nlin,1,-1)]
 
     # Condition encastree (derivee 1 = 0)
-    vecInteg = vecInteg[1] - vecInteg
-    vecAngleFlexion = vecInteg
+    vecAngleFlexion = vecAngleFlexion[1] - vecAngleFlexion
 
     # Test de l'hypothese des petits deplacements
     AngleMax = 21 * pi / 180 # 21 degrees is the limit
@@ -237,7 +228,6 @@ bend = function(data,elastic_modulus,shear_modulus, step = 0.02, points = 100,
     }
 
     # Torsion
-    pesanteur = 9.8
     vMTor = rep(0, NpointsExp)
 
     for(iter in 1 : NpointsExp){
@@ -247,7 +237,6 @@ bend = function(data,elastic_modulus,shear_modulus, step = 0.02, points = 100,
 
       FGa = matrix(c(0,0,-vPoidsFeuillesG[iter] * vDist_P2P1[iter] * pesanteur), nrow = 3, byrow = TRUE)
       # Code avec invariance par 'iterations'
-      # ForceFeuilGa = Rota_Inverse_YZ(FGa, oriAglXY[iter], oriAglXZ[iter])
       ForceFeuilGa = Rota_Inverse_YZ(FGa, vecAngle_XY[iter], vecAngle_XZ[iter])
 
       DistPoint = vecDAppliPoidsFeuil[iDiscretPtsExp[iter]]
@@ -322,7 +311,7 @@ bend = function(data,elastic_modulus,shear_modulus, step = 0.02, points = 100,
       # Torsion
       # Equivalent a une rotation autour de OX
       # Initialement la section est tournee mais sans torsion
-      aglTorGeom = SomCum_vecAglTor[iter] - oriTor[iter]
+      aglTorGeom = SomCum_vecAglTor[iter] - vecAglTor[iter]
 
       cs = cos(aglTorGeom)
       sn = sin(aglTorGeom)
@@ -377,6 +366,10 @@ bend = function(data,elastic_modulus,shear_modulus, step = 0.02, points = 100,
       matDistPtsExp[iterPoids, iter] = sqrt(c1 + c2 + c3)
     }
   } # iterPoids
+
+  if(all_points){
+    iDiscretPtsExp = seq_along(vecX)
+  }
 
   PtsX = vecX[iDiscretPtsExp]
   PtsY = vecY[iDiscretPtsExp]

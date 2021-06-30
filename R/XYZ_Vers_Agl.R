@@ -1,4 +1,4 @@
-#' Title
+#' Points to angles
 #'
 #' @param vecX X coordinates (m)
 #' @param vecY Y coordinates (m)
